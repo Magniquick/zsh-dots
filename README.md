@@ -7,10 +7,10 @@ ZDOTDIR=~/.config/zsh
 [[ ! -f "$ZDOTDIR"/.zshenv ]] || source -- "$ZDOTDIR"/.zshenv
 ```
 ## Requirements 
-necessary - fzf.
-optional - timg, atutin, and preferably iTerm2 and homebrew.
+Necessary - fzf. \
+Optional - timg, atutin, and preferably iTerm2 and homebrew.
 ## Contibuting
 Open a issue, add the output of $TERM_PROGRAM and which format is used by your terminal on https://github.com/hzeller/timg to add image preview support there.
-alternatively, add it to lessfilter and open a pr !
+Alternatively, add it to lessfilter and open a pr !
 
 Happy hacking !
