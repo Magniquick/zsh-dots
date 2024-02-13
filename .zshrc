@@ -55,7 +55,11 @@ mysql-connect() {
 
 }
 alias mysql-stop='mysqladmin -u root shutdown && echo mysql has been stopped' 
+
 alias wget=wget --hsts-file="$XDG_DATA_HOME/wget-hsts"
+
+export EDITOR="code -w"
+export VISUAL="$EDITOR"
 
 # Some aliases
 alias ls='eza --icons=auto'
