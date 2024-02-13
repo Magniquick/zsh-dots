@@ -1,10 +1,9 @@
 # Zsh-dotfiles !
 Just my zsh dots : P
 ## Setup:
-Clone this to ~/.config/zsh, and create a .zshenv file in ~ with the the following -
+Clone this to ~/.config/zsh, and create /etc/zshenv file with the the following -
 ```zsh
-ZDOTDIR=~/.config/zsh
-[[ ! -f "$ZDOTDIR"/.zshenv ]] || source -- "$ZDOTDIR"/.zshenv
+export ZDOTDIR="$HOME"/.config/zsh
 ```
 ## Requirements 
 Necessary - fzf. \
