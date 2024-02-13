@@ -82,6 +82,10 @@ source $ZDOTDIR/plugins/fzf-tab/fzf-tab.plugin.zsh
 source $ZDOTDIR/plugins/fzf-tab-source/fzf-tab-source.plugin.zsh
 export LESSOPEN="|$ZDOTDIR/lessfilter %s"
 zstyle ':fzf-tab:*' fzf-min-height 70
+zstyle ':completion:complete:*:argument-rest' sort false
+zstyle ':completion:*' file-sort modification
+zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}'  # case insensitive file matching
+setopt globdots
 fpath=($ZDOTDIR/plugins/zsh-completions/src $fpath)
 
 source $ZDOTDIR/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
