@@ -6,7 +6,7 @@
 typeset -U path PATH
 
 # add homebrew completions
-if command -v /opt/homebrew/bin/brew &>/dev/null; then
+if [[ -e /opt/homebrew/bin/brew ]]; then
   fpath=(/opt/homebrew/share/zsh/site-functions $fpath);
   #eval "$(/opt/homebrew/bin/brew shellenv)" # a bit too slow
   export HOMEBREW_PREFIX="/opt/homebrew";
@@ -23,7 +23,7 @@ fi
 source $ZDOTDIR/zsh_plugins.sh
 
 # TRULY clear the history buffer
-alias reset="clear && clear"
+# alias reset="clear && clear" dosent work : ()
 # Auto cd ! 
 setopt autocd
 # interactive comments - dont you all talk to yourself ?
@@ -57,6 +57,18 @@ mysql-connect() {
 alias mysql-stop='mysqladmin -u root shutdown && echo mysql has been stopped' 
 
 alias wget=wget --hsts-file="$XDG_DATA_HOME/wget-hsts"
+
+if [[ "$(uname -s)" = Darwin ]]; then
+  function man-preview() {
+    [[ $# -eq 0 ]] && >&2 echo "Usage: $0 command1 [command2 ...]" && return 1
+
+    local page
+    for page in "${(@f)"$(man -w $@)"}"; do
+      command mandoc -Tpdf $page | open -f -a Preview
+    done
+  }
+  compdef _man man-preview
+fi
 
 export EDITOR="code -w"
 export VISUAL="$EDITOR"

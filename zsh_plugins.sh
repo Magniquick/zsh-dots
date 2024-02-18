@@ -10,7 +10,7 @@ function rebuild() {
 	# Compile Powerlevel10k package
 	make -sC $ZDOTDIR/plugins/powerlevel10k pkg zwc &
   zcompile-many $ZDOTDIR/.p10k.zsh &
-  zcompile-many ${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-*.zsh &
+  zcompile-many $XDG_CACHE_HOME/p10k-instant-prompt-*.zsh &
 
   # Move and compile Fast Syntax Highlighting scripts
 	(mv -- $ZDOTDIR/plugins/fast-syntax-highlighting/{'→chroma','tmp'} && zcompile-many $ZDOTDIR/plugins/fast-syntax-highlighting/{fast*,.fast*,**/*.ch,**/*.zsh} && mv -- $ZDOTDIR/plugins/fast-syntax-highlighting/{'tmp','→chroma'}) &
@@ -25,7 +25,7 @@ function rebuild() {
   zcompile-many $ZDOTDIR/init_atuin.zsh &
 
   #compinit
-  zcompile-many ${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache/^(*(D).(zwc|old)) &
+  zcompile-many $XDG_CACHE_HOME/zsh/zcompcache/^(*(D).(zwc|old)) &
   wait
 }
 
@@ -56,6 +56,9 @@ fi
 if [[ ! -e $ZDOTDIR/plugins/zsh-completions ]]; then
   git clone --depth=1 --recursive --shallow-submodules https://github.com/zsh-users/zsh-completions.git $ZDOTDIR/plugins/zsh-completions
   requires_rebuild=True
+fi
+if [[ ! -e $ZDOTDIR/plugins/clipboard ]]; then
+  git clone --depth=1 --recursive --shallow-submodules https://github.com/zpm-zsh/clipboard.git $ZDOTDIR/plugins/clipboard
 fi
 if [[ ! -e $ZDOTDIR/plugins/iterm2 ]]; then
   git clone --depth=1 --recursive --shallow-submodules https://github.com/gnachman/iTerm2-shell-integration.git $ZDOTDIR/plugins/iterm2
@@ -92,12 +95,15 @@ source $ZDOTDIR/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin
 source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 
+source  $ZDOTDIR/plugins/clipboard/clipboard.plugin.zsh
+
 if [[ $TERM_PROGRAM = "iTerm.app" ]]; then
   source "$ZDOTDIR/plugins/iterm2/shell_integration/zsh"
 fi
 
 # Enable the "new" completion system (compsys).
 # Add plugins that change fpath above this - I nearly lost my sanity over this :/ 
+zstyle ':completion::complete:*' use-cache on
 zstyle ':completion::complete:*' cache-path "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache/"
 autoload -Uz compinit && compinit -ud ${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache/.zcompdump
 

@@ -107,5 +107,5 @@ elif [ "$category" = text ]; then
 		pygmentize "$1" | less
 	fi
 else
-	echo mime
+	echo $category
 fi
