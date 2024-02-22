@@ -101,8 +101,6 @@ zstyle ':completion:*' file-sort modification
 zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}'  # case insensitive file matching
 # switch group using `,`
 zstyle ':fzf-tab:*' switch-group ','
-# set descriptions format to enable group support
-zstyle ':completion:*:descriptions' format '[%d]'
 
 source $ZDOTDIR/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
