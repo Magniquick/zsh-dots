@@ -1,3 +1,4 @@
+#!/bin/zsh
 function zcompile-many() {
   autoload -U zrecompile
   local f
@@ -45,7 +46,7 @@ if [[ ! -e $ZDOTDIR/plugins/powerlevel10k ]]; then
   requires_rebuild=True
 fi
 if [[ ! -e $ZDOTDIR/plugins/fzf-tab ]]; then
-  git clone --depth=1  --recursive --shallow-submodules -b complete-common-prefix --single-branch https://github.com/jochenwierum/fzf-tab.git $ZDOTDIR/plugins/fzf-tab # uses a fork for auto prefix matching
+  git clone --depth=1  --recursive --shallow-submodules -b feat/complete-prefix --single-branch https://github.com/Aloxaf/fzf-tab.git $ZDOTDIR/plugins/fzf-tab # uses a pr for auto prefix matching
   # git clone --depth=1 https://github.com/Aloxaf/fzf-tab.git $ZDOTDIR/plugins/fzf-tab # orginal
   requires_rebuild=True
 fi
@@ -81,31 +82,37 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 # Load plugins.
-source $ZDOTDIR/plugins/fzf-tab/fzf-tab.plugin.zsh
+# https://github.com/Aloxaf/fzf-tab?tab=readme-ov-file#install -> fzf-tab after compinit, before zsh plugins which warp widgets
+fpath=($ZDOTDIR/plugins/zsh-completions/src $fpath)
+# Enable the "new" completion system (compsys).
+# Add plugins that change fpath above this - I nearly lost my sanity over this :/ 
+zstyle ':completion::complete:*' use-cache on
+zstyle ':completion::complete:*' cache-path "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache/"
+autoload -Uz compinit && compinit -ud "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache/.zcompdump"
+
 source $ZDOTDIR/plugins/fzf-tab-source/fzf-tab-source.plugin.zsh
+source $ZDOTDIR/plugins/fzf-tab/fzf-tab.plugin.zsh
 export LESSOPEN="|$ZDOTDIR/lessfilter %s"
+setopt globdots
+zstyle ':completion:*' menu auto
 zstyle ':fzf-tab:*' fzf-min-height 70
 zstyle ':completion:complete:*:argument-rest' sort false
 zstyle ':completion:*' file-sort modification
 zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}'  # case insensitive file matching
-setopt globdots
-fpath=($ZDOTDIR/plugins/zsh-completions/src $fpath)
+# switch group using `,`
+zstyle ':fzf-tab:*' switch-group ','
+# set descriptions format to enable group support
+zstyle ':completion:*:descriptions' format '[%d]'
 
 source $ZDOTDIR/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 
-source  $ZDOTDIR/plugins/clipboard/clipboard.plugin.zsh
+source $ZDOTDIR/plugins/clipboard/clipboard.plugin.zsh
 
 if [[ $TERM_PROGRAM = "iTerm.app" ]]; then
   source "$ZDOTDIR/plugins/iterm2/shell_integration/zsh"
 fi
-
-# Enable the "new" completion system (compsys).
-# Add plugins that change fpath above this - I nearly lost my sanity over this :/ 
-zstyle ':completion::complete:*' use-cache on
-zstyle ':completion::complete:*' cache-path "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache/"
-autoload -Uz compinit && compinit -ud ${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache/.zcompdump
 
 # To customize prompt, run `p10k configure` or edit $ZDOTDIR/p10k.zsh.
 [[ ! -f $ZDOTDIR/.p10k.zsh ]] || source $ZDOTDIR/.p10k.zsh

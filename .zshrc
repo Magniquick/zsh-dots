@@ -7,6 +7,7 @@ typeset -U path PATH
 
 # add homebrew completions
 if [[ -e /opt/homebrew/bin/brew ]]; then
+  #$(brew --prefix)/share/zsh/site-functions - would use this, but brew is too slow
   fpath=(/opt/homebrew/share/zsh/site-functions $fpath);
   #eval "$(/opt/homebrew/bin/brew shellenv)" # a bit too slow
   export HOMEBREW_PREFIX="/opt/homebrew";
@@ -17,7 +18,6 @@ if [[ -e /opt/homebrew/bin/brew ]]; then
   export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}";
 
   export HOMEBREW_NO_ENV_HINTS=TRUE
-  #$(brew --prefix)/share/zsh/site-functions - would use this, but brew is too slow
 fi
 
 source $ZDOTDIR/zsh_plugins.sh
@@ -107,5 +107,5 @@ topgrade() {
   command topgrade "$@" && rebuild # rebuilds zsh plugins after being pulled from github.
 }
 
-# Created by `pipx` on 2023-12-13 16:49:03 (I should've donr this a while ago anyways :P)
+# Created by `pipx` on 2023-12-13 16:49:03 (I should've done this a while ago anyways :P)
 export PATH="$HOME/.local/bin:$PATH"
