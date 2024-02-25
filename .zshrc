@@ -74,8 +74,8 @@ export EDITOR="code -w"
 export VISUAL="$EDITOR"
 
 # Some aliases
-alias ls='eza --icons=auto'
-alias lah='eza -lah --icons=auto'
+alias ls='eza --icons=auto --hyperlink'
+alias lah='eza -lah --icons=auto --hyperlink'
 
 # save your sanity a bit
 # fixes https://stackoverflow.com/questions/68442817/iterm2-alt-backspace-like-linux#comment120968426_68442817 in a neat way
