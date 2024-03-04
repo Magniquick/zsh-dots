@@ -23,7 +23,7 @@ fi
 source $ZDOTDIR/zsh_plugins.sh
 
 # TRULY clear the history buffer
-# alias reset="clear && clear" dosent work : ()
+# alias reset="clear && clear" dosent work : (
 # Auto cd ! 
 setopt autocd
 # interactive comments - dont you all talk to yourself ?
@@ -108,4 +108,4 @@ topgrade() {
 }
 
 # Created by `pipx` on 2023-12-13 16:49:03 (I should've done this a while ago anyways :P)
-export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"export PATH="/opt/homebrew/opt/ruby@3.1/bin:$PATH"

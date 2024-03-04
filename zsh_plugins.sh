@@ -26,7 +26,7 @@ function rebuild() {
   zcompile-many $ZDOTDIR/init_atuin.zsh &
 
   #compinit
-  zcompile-many $XDG_CACHE_HOME/zsh/zcompcache/^(*(D).(zwc|old)) &
+  zcompile-many $XDG_CACHE_HOME/zsh/zcompcache/^(*.(zwc|old)) &
   wait
 }
 
@@ -46,7 +46,7 @@ if [[ ! -e $ZDOTDIR/plugins/powerlevel10k ]]; then
   requires_rebuild=True
 fi
 if [[ ! -e $ZDOTDIR/plugins/fzf-tab ]]; then
-  git clone --depth=1  --recursive --shallow-submodules -b feat/complete-prefix --single-branch https://github.com/Aloxaf/fzf-tab.git $ZDOTDIR/plugins/fzf-tab # uses a pr for auto prefix matching
+  git clone --depth=1  --recursive --shallow-submodules https://github.com/Aloxaf/fzf-tab.git $ZDOTDIR/plugins/fzf-tab # uses a pr for auto prefix matching
   # git clone --depth=1 https://github.com/Aloxaf/fzf-tab.git $ZDOTDIR/plugins/fzf-tab # orginal
   requires_rebuild=True
 fi
@@ -92,10 +92,10 @@ fpath=($ZDOTDIR/plugins/zsh-completions/src $fpath)
 # Add plugins that change fpath above this - I nearly lost my sanity over this :/ 
 zstyle ':completion::complete:*' use-cache on
 zstyle ':completion::complete:*' cache-path "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache/"
-autoload -Uz compinit && compinit -ud "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache/.zcompdump"
+autoload -Uz compinit && compinit -u -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache/.zcompdump"
 
-source $ZDOTDIR/plugins/fzf-tab-source/fzf-tab-source.plugin.zsh
-source $ZDOTDIR/plugins/fzf-tab/fzf-tab.plugin.zsh
+source $ZDOTDIR/plugins/clipboard/clipboard.plugin.zsh
+
 export LESSOPEN="|$ZDOTDIR/lessfilter %s"
 setopt globdots
 zstyle ':completion:*' menu auto
@@ -107,12 +107,12 @@ zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}'  # case insensit
 zstyle ':fzf-tab:*' switch-group ','
 # set list-colors to enable filename colorizing 
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+source $ZDOTDIR/plugins/fzf-tab-source/fzf-tab-source.plugin.zsh
+source $ZDOTDIR/plugins/fzf-tab/fzf-tab.plugin.zsh
 
+ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 source $ZDOTDIR/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-ZSH_AUTOSUGGEST_MANUAL_REBIND=1
-
-source $ZDOTDIR/plugins/clipboard/clipboard.plugin.zsh
 
 if [[ $TERM_PROGRAM = "iTerm.app" ]]; then
   source "$ZDOTDIR/plugins/iterm2/shell_integration/zsh"
