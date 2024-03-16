@@ -98,7 +98,7 @@ source $ZDOTDIR/plugins/clipboard/clipboard.plugin.zsh
 
 export LESSOPEN="|$ZDOTDIR/lessfilter %s"
 setopt globdots
-zstyle ':completion:*' menu auto
+zstyle ':completion:*' menu no
 zstyle ':fzf-tab:*' fzf-min-height 70
 zstyle ':completion:complete:*:argument-rest' sort false
 zstyle ':completion:*' file-sort modification
