@@ -1,79 +1,79 @@
 #!/bin/zsh
 function zcompile-many() {
-  autoload -U zrecompile
-  local f
-  for f; do zrecompile -pq "$f"; done
+	autoload -U zrecompile
+	local f
+	for f; do zrecompile -pq "$f"; done
 }
 
 # For rebuildiing in case of updates.
 function rebuild() {
 	echo "starting compile"
 	# Compile Powerlevel10k package
-  make -sC $ZDOTDIR/plugins/powerlevel10k pkg zwc &
-  zcompile-many $ZDOTDIR/.p10k.zsh &
-  zcompile-many $XDG_CACHE_HOME/p10k-instant-prompt-*.zsh &
+	make -sC $ZDOTDIR/plugins/powerlevel10k pkg zwc &
+	zcompile-many $ZDOTDIR/.p10k.zsh &
+	zcompile-many $XDG_CACHE_HOME/p10k-instant-prompt-*.zsh &
 
-  # Move and compile Fast Syntax Highlighting scripts
+	# Move and compile Fast Syntax Highlighting scripts
 	(mv -- $ZDOTDIR/plugins/fast-syntax-highlighting/{'→chroma','tmp'} && \
-  zcompile-many $ZDOTDIR/plugins/fast-syntax-highlighting/{fast*,.fast*,**/*.ch,**/*.zsh} && \
-  mv -- $ZDOTDIR/plugins/fast-syntax-highlighting/{'tmp','→chroma'}) &
+	zcompile-many $ZDOTDIR/plugins/fast-syntax-highlighting/{fast*,.fast*,**/*.ch,**/*.zsh} && \
+	mv -- $ZDOTDIR/plugins/fast-syntax-highlighting/{'tmp','→chroma'}) &
 	
 	# Compile Zsh Autosuggestions scripts
 	zcompile-many $ZDOTDIR/plugins/zsh-autosuggestions/{*.zsh,src/**/*.zsh} &
 
-  # fzf-tab and friends. 
-  zcompile-many $ZDOTDIR/plugins/zsh-completions/{*.zsh,src/*} &
-  zcompile-many $ZDOTDIR/plugins/fzf-tab/*.zsh &
-  zcompile-many $ZDOTDIR/plugins/fzf-tab-source/{*.zsh,sources/*.zsh,functions/*.zsh} &
-  zcompile-many $ZDOTDIR/init_atuin.zsh &
+	# fzf-tab and friends. 
+	zcompile-many $ZDOTDIR/plugins/zsh-completions/{*.zsh,src/*} &
+	zcompile-many $ZDOTDIR/plugins/fzf-tab/*.zsh &
+	zcompile-many $ZDOTDIR/plugins/fzf-tab-source/{*.zsh,sources/*.zsh,functions/*.zsh} &
+	zcompile-many $ZDOTDIR/init_atuin.zsh &
 
-  #compinit
-  zcompile-many $XDG_CACHE_HOME/zsh/zcompcache/^(*.(zwc|old)) &
+	#compinit
+	zcompile-many $XDG_CACHE_HOME/zsh/zcompcache/^(*.(zwc|old)) &
 
-  #and this file too
-  zcompile-many $ZDOTDIR/zsh_plugins.sh
-  wait
+	#and this file too
+	zcompile-many $ZDOTDIR/zsh_plugins.sh
+	wait
 }
 
 # Clone and compile to wordcode missing plugins.
 if [[ ! -e $ZDOTDIR/plugins/fast-syntax-highlighting ]]; then
-  git clone --depth=1 --recursive --shallow-submodules https://github.com/zdharma-continuum/fast-syntax-highlighting.git $ZDOTDIR/plugins/fast-syntax-highlighting
-  curl --create-dirs -O --output-dir ${XDG_CONFIG_HOME}/fsh https://raw.githubusercontent.com/catppuccin/zsh-fsh/main/themes/catppuccin-macchiato.ini # catppucin gang rise up !
-  fast-theme XDG:catppuccin-macchiato
-  requires_rebuild=True
+	git clone --depth=1 --recursive --shallow-submodules https://github.com/zdharma-continuum/fast-syntax-highlighting.git $ZDOTDIR/plugins/fast-syntax-highlighting
+	curl --create-dirs -O --output-dir ${XDG_CONFIG_HOME}/fsh https://raw.githubusercontent.com/catppuccin/zsh-fsh/main/themes/catppuccin-macchiato.ini # catppucin gang rise up !
+	fast-theme XDG:catppuccin-macchiato
+	requires_rebuild=True
 fi
 if [[ ! -e $ZDOTDIR/plugins/zsh-autosuggestions ]]; then
-  git clone --depth=1 --recursive --shallow-submodules https://github.com/zsh-users/zsh-autosuggestions.git $ZDOTDIR/plugins/zsh-autosuggestions
-  requires_rebuild=True
+	git clone --depth=1 --recursive --shallow-submodules https://github.com/zsh-users/zsh-autosuggestions.git $ZDOTDIR/plugins/zsh-autosuggestions
+	requires_rebuild=True
 fi
 if [[ ! -e $ZDOTDIR/plugins/powerlevel10k ]]; then
-  git clone --depth=1 --recursive --shallow-submodules https://github.com/romkatv/powerlevel10k.git $ZDOTDIR/plugins/powerlevel10k
-  requires_rebuild=True
+	git clone --depth=1 --recursive --shallow-submodules https://github.com/romkatv/powerlevel10k.git $ZDOTDIR/plugins/powerlevel10k
+	requires_rebuild=True
 fi
 if [[ ! -e $ZDOTDIR/plugins/fzf-tab ]]; then
-  git clone --depth=1  --recursive --shallow-submodules https://github.com/Aloxaf/fzf-tab.git $ZDOTDIR/plugins/fzf-tab # uses a pr for auto prefix matching
-  # git clone --depth=1 https://github.com/Aloxaf/fzf-tab.git $ZDOTDIR/plugins/fzf-tab # orginal
-  requires_rebuild=True
+	git clone --depth=1  --recursive --shallow-submodules https://github.com/Aloxaf/fzf-tab.git $ZDOTDIR/plugins/fzf-tab # uses a pr for auto prefix matching
+	# git clone --depth=1 https://github.com/Aloxaf/fzf-tab.git $ZDOTDIR/plugins/fzf-tab # orginal
+	requires_rebuild=True
 fi
 if [[ ! -e $ZDOTDIR/plugins/fzf-tab-source ]]; then
-  git clone --depth=1 --recursive --shallow-submodules https://github.com/Freed-Wu/fzf-tab-source.git $ZDOTDIR/plugins/fzf-tab-source
-  requires_rebuild=True
+	git clone --depth=1 --recursive --shallow-submodules https://github.com/Freed-Wu/fzf-tab-source.git $ZDOTDIR/plugins/fzf-tab-source
+	requires_rebuild=True
 fi
 if [[ ! -e $ZDOTDIR/plugins/zsh-completions ]]; then
-  git clone --depth=1 --recursive --shallow-submodules https://github.com/zsh-users/zsh-completions.git $ZDOTDIR/plugins/zsh-completions
-  requires_rebuild=True
+	git clone --depth=1 --recursive --shallow-submodules https://github.com/zsh-users/zsh-completions.git $ZDOTDIR/plugins/zsh-completions
+	requires_rebuild=True
 fi
 if [[ ! -e $ZDOTDIR/plugins/clipboard ]]; then
-  git clone --depth=1 --recursive --shallow-submodules https://github.com/zpm-zsh/clipboard.git $ZDOTDIR/plugins/clipboard
+	git clone --depth=1 --recursive --shallow-submodules https://github.com/zpm-zsh/clipboard.git $ZDOTDIR/plugins/clipboard
 fi
 if [[ ! -e $ZDOTDIR/plugins/iterm2 ]] && [[ $TERM_PROGRAM = "iTerm.app" ]]; then
-  git clone --depth=1 --recursive --shallow-submodules https://github.com/gnachman/iTerm2-shell-integration.git $ZDOTDIR/plugins/iterm2
+	git clone --depth=1 --recursive --shallow-submodules https://github.com/gnachman/iTerm2-shell-integration.git $ZDOTDIR/plugins/iterm2
 fi
 
 
 if ! type fzf &>/dev/null; then
-  echo 'Warning: fzf is requried for the bundled fzf-tab plugin but was not found.'
-  echo 'Please install it.'
+	echo 'Warning: fzf is requried for the bundled fzf-tab plugin but was not found.'
+	echo 'Please install it.'
 fi
 
 if (( ${+requires_rebuild} )); then
@@ -83,7 +83,7 @@ fi
 # Activate Powerlevel10k Instant Prompt.
 # Try to move all possible commands below this (make sure there is no output by the commands).
 if [[ -r "${XDG_CACHE_HOME}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME}/p10k-instant-prompt-${(%):-%n}.zsh"
+	source "${XDG_CACHE_HOME}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
 # Generated using $(vivid generate catppuccin-macchiato)
@@ -120,12 +120,12 @@ source $ZDOTDIR/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin
 source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 if [[ $TERM_PROGRAM = "iTerm.app" ]]; then
-  source "$ZDOTDIR/plugins/iterm2/shell_integration/zsh"
+	source "$ZDOTDIR/plugins/iterm2/shell_integration/zsh"
 elif [[ $TERM = "xterm-kitty" ]] && [[ -n $KITTY_INSTALLATION_DIR ]]; then
-  export KITTY_SHELL_INTEGRATION="enabled"
-  autoload -Uz -- "$KITTY_INSTALLATION_DIR"/shell-integration/zsh/kitty-integration
-  kitty-integration
-  unfunction kitty-integration
+	export KITTY_SHELL_INTEGRATION="enabled"
+	autoload -Uz -- "$KITTY_INSTALLATION_DIR"/shell-integration/zsh/kitty-integration
+	kitty-integration
+	unfunction kitty-integration
 fi
 
 
