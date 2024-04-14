@@ -9,14 +9,14 @@ function zcompile-many() {
 function rebuild() {
 	echo "starting compile"
 	# Compile Powerlevel10k package
-	make -sC $ZDOTDIR/plugins/powerlevel10k pkg zwc &
+  make -sC $ZDOTDIR/plugins/powerlevel10k pkg zwc &
   zcompile-many $ZDOTDIR/.p10k.zsh &
   zcompile-many $XDG_CACHE_HOME/p10k-instant-prompt-*.zsh &
 
   # Move and compile Fast Syntax Highlighting scripts
 	(mv -- $ZDOTDIR/plugins/fast-syntax-highlighting/{'→chroma','tmp'} && \
-   zcompile-many $ZDOTDIR/plugins/fast-syntax-highlighting/{fast*,.fast*,**/*.ch,**/*.zsh} && \
-   mv -- $ZDOTDIR/plugins/fast-syntax-highlighting/{'tmp','→chroma'}) &
+  zcompile-many $ZDOTDIR/plugins/fast-syntax-highlighting/{fast*,.fast*,**/*.ch,**/*.zsh} && \
+  mv -- $ZDOTDIR/plugins/fast-syntax-highlighting/{'tmp','→chroma'}) &
 	
 	# Compile Zsh Autosuggestions scripts
 	zcompile-many $ZDOTDIR/plugins/zsh-autosuggestions/{*.zsh,src/**/*.zsh} &
