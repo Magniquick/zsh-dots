@@ -1,16 +1,16 @@
 if [[ -e /opt/homebrew/bin/brew ]]; then
-  #TODO: some sort of cache system ?
-  #$(brew --prefix)/share/zsh/site-functions - would use this, but brew is too slow
-  fpath=(/opt/homebrew/share/zsh/site-functions $fpath);
-  #eval "$(/opt/homebrew/bin/brew shellenv)" # a bit too slow
-  export HOMEBREW_PREFIX="/opt/homebrew";
-  export HOMEBREW_CELLAR="/opt/homebrew/Cellar";
-  export HOMEBREW_REPOSITORY="/opt/homebrew";
-  export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}";
-  export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:";
-  export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}";
+	#TODO: some sort of cache system ?
+	#$(brew --prefix)/share/zsh/site-functions - would use this, but brew is too slow
+	fpath=(/opt/homebrew/share/zsh/site-functions $fpath);
+	#eval "$(/opt/homebrew/bin/brew shellenv)" # a bit too slow
+	export HOMEBREW_PREFIX="/opt/homebrew";
+	export HOMEBREW_CELLAR="/opt/homebrew/Cellar";
+	export HOMEBREW_REPOSITORY="/opt/homebrew";
+	export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}";
+	export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:";
+	export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}";
 
-  export HOMEBREW_NO_ENV_HINTS=TRUE
+	export HOMEBREW_NO_ENV_HINTS=TRUE
 fi
 
 source $ZDOTDIR/zsh_plugins.sh
