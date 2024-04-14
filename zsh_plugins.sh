@@ -14,7 +14,9 @@ function rebuild() {
   zcompile-many $XDG_CACHE_HOME/p10k-instant-prompt-*.zsh &
 
   # Move and compile Fast Syntax Highlighting scripts
-	(mv -- $ZDOTDIR/plugins/fast-syntax-highlighting/{'→chroma','tmp'} && zcompile-many $ZDOTDIR/plugins/fast-syntax-highlighting/{fast*,.fast*,**/*.ch,**/*.zsh} && mv -- $ZDOTDIR/plugins/fast-syntax-highlighting/{'tmp','→chroma'}) &
+	(mv -- $ZDOTDIR/plugins/fast-syntax-highlighting/{'→chroma','tmp'} && \
+   zcompile-many $ZDOTDIR/plugins/fast-syntax-highlighting/{fast*,.fast*,**/*.ch,**/*.zsh} && \
+   mv -- $ZDOTDIR/plugins/fast-syntax-highlighting/{'tmp','→chroma'}) &
 	
 	# Compile Zsh Autosuggestions scripts
 	zcompile-many $ZDOTDIR/plugins/zsh-autosuggestions/{*.zsh,src/**/*.zsh} &
@@ -27,6 +29,9 @@ function rebuild() {
 
   #compinit
   zcompile-many $XDG_CACHE_HOME/zsh/zcompcache/^(*.(zwc|old)) &
+
+  #and this file too
+  zcompile-many $ZDOTDIR/zsh_plugins.sh
   wait
 }
 
