@@ -33,7 +33,7 @@ function rebuild() {
 # Clone and compile to wordcode missing plugins.
 if [[ ! -e $ZDOTDIR/plugins/fast-syntax-highlighting ]]; then
   git clone --depth=1 --recursive --shallow-submodules https://github.com/zdharma-continuum/fast-syntax-highlighting.git $ZDOTDIR/plugins/fast-syntax-highlighting
-  curl --create-dirs -O --output-dir ${XDG_CONFIG_HOME:-$HOME/.config}/fsh https://raw.githubusercontent.com/catppuccin/zsh-fsh/main/themes/catppuccin-macchiato.ini # catppucin gang rise up !
+  curl --create-dirs -O --output-dir ${XDG_CONFIG_HOME}/fsh https://raw.githubusercontent.com/catppuccin/zsh-fsh/main/themes/catppuccin-macchiato.ini # catppucin gang rise up !
   fast-theme XDG:catppuccin-macchiato
   requires_rebuild=True
 fi
@@ -61,7 +61,7 @@ fi
 if [[ ! -e $ZDOTDIR/plugins/clipboard ]]; then
   git clone --depth=1 --recursive --shallow-submodules https://github.com/zpm-zsh/clipboard.git $ZDOTDIR/plugins/clipboard
 fi
-if [[ ! -e $ZDOTDIR/plugins/iterm2 ]]; then
+if [[ ! -e $ZDOTDIR/plugins/iterm2 ]] && [[ $TERM_PROGRAM = "iTerm.app" ]]; then
   git clone --depth=1 --recursive --shallow-submodules https://github.com/gnachman/iTerm2-shell-integration.git $ZDOTDIR/plugins/iterm2
 fi
 
@@ -77,8 +77,8 @@ fi
 
 # Activate Powerlevel10k Instant Prompt.
 # Try to move all possible commands below this (make sure there is no output by the commands).
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+if [[ -r "${XDG_CACHE_HOME}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
 # Generated using $(vivid generate catppuccin-macchiato)
@@ -91,8 +91,8 @@ fpath=($ZDOTDIR/plugins/zsh-completions/src $fpath)
 # Enable the "new" completion system (compsys).
 # Add plugins that change fpath above this - I nearly lost my sanity over this :/ 
 zstyle ':completion::complete:*' use-cache on
-zstyle ':completion::complete:*' cache-path "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache/"
-autoload -Uz compinit && compinit -u -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompcache/.zcompdump"
+zstyle ':completion::complete:*' cache-path "${XDG_CACHE_HOME}/zsh/zcompcache/"
+autoload -Uz compinit && compinit -u -d "${XDG_CACHE_HOME}/zsh/zcompcache/.zcompdump"
 
 source $ZDOTDIR/plugins/clipboard/clipboard.plugin.zsh
 
@@ -116,7 +116,13 @@ source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 if [[ $TERM_PROGRAM = "iTerm.app" ]]; then
   source "$ZDOTDIR/plugins/iterm2/shell_integration/zsh"
+elif [[ $TERM = "xterm-kitty" ]] && [[ -n $KITTY_INSTALLATION_DIR ]]; then
+  export KITTY_SHELL_INTEGRATION="enabled"
+  autoload -Uz -- "$KITTY_INSTALLATION_DIR"/shell-integration/zsh/kitty-integration
+  kitty-integration
+  unfunction kitty-integration
 fi
+
 
 # To customize prompt, run `p10k configure` or edit $ZDOTDIR/p10k.zsh.
 [[ ! -f $ZDOTDIR/.p10k.zsh ]] || source $ZDOTDIR/.p10k.zsh

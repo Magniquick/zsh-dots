@@ -6,6 +6,7 @@
 typeset -U path PATH
 
 # add homebrew completions
+# TODO: make  a macos.zsh
 if [[ -e /opt/homebrew/bin/brew ]]; then
   #$(brew --prefix)/share/zsh/site-functions - would use this, but brew is too slow
   fpath=(/opt/homebrew/share/zsh/site-functions $fpath);
@@ -29,8 +30,9 @@ setopt autocd
 # interactive comments - dont you all talk to yourself ?
 setopt interactivecomments
 setopt histignorespace # better history. 
-setopt EXTENDED_GLOB # required for the rebuild function to work
+setopt EXTENDED_GLOB # required for the rebuild function to work, plus it's nice !
 # python go brrr
+# TODO: venv.
 export PATH="/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"
 
 # https://superuser.com/a/645612
@@ -70,7 +72,7 @@ if [[ "$(uname -s)" = Darwin ]]; then
   compdef _man man-preview
 fi
 
-export EDITOR="code -w"
+export EDITOR="code -w" # TODO: something sane
 export VISUAL="$EDITOR"
 
 # Some aliases
@@ -100,6 +102,8 @@ if command -v atuin &> /dev/null; then
 	ZSH_AUTOSUGGEST_STRATEGY=(atuin_currentdir atuin_top completion)
 fi
 
+# https://hasseg.org/trash/
+# TODO: linux && check if tool exists 
 alias del="trash" 
 alias rm="echo Use 'del', or the full path i.e. '/bin/rm'"
 
@@ -108,4 +112,4 @@ topgrade() {
 }
 
 # Created by `pipx` on 2023-12-13 16:49:03 (I should've done this a while ago anyways :P)
-export PATH="$HOME/.local/bin:$PATH"export PATH="/opt/homebrew/opt/ruby@3.1/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
