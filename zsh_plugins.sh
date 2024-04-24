@@ -56,7 +56,7 @@ if [[ ! -e $ZDOTDIR/plugins/fzf-tab ]]; then
 	requires_rebuild=True
 fi
 if [[ ! -e $ZDOTDIR/plugins/fzf-tab-source ]]; then
-	git clone --depth=1 --recursive --shallow-submodules https://github.com/Freed-Wu/fzf-tab-source.git $ZDOTDIR/plugins/fzf-tab-source
+	git clone --depth=1 --recursive --shallow-submodules https://github.com/Magniquick/fzf-tab-source.git $ZDOTDIR/plugins/fzf-tab-source
 	requires_rebuild=True
 fi
 if [[ ! -e $ZDOTDIR/plugins/zsh-completions ]]; then
