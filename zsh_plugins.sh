@@ -2,7 +2,7 @@
 function zcompile-many() {
 	autoload -U zrecompile
 	local f
-	for f; do zrecompile -pq "$f"; done
+	for f in "$@"; do zrecompile -pq "$f"; done
 }
 
 # For rebuildiing in case of updates.
@@ -30,51 +30,51 @@ function rebuild() {
 	#compinit
 	zcompile-many $XDG_CACHE_HOME/zsh/zcompcache/^(*.(zwc|old)) &
 
-	#and this file too
-	zcompile-many $ZDOTDIR/zsh_plugins.sh
+	#and some more files too
+	zcompile-many $ZDOTDIR/zsh_plugins.sh $ZDOTDIR/macos.zsh
 	wait
 }
 
 # Clone and compile to wordcode missing plugins.
-if [[ ! -e $ZDOTDIR/plugins/fast-syntax-highlighting ]]; then
-	git clone --depth=1 --recursive --shallow-submodules https://github.com/zdharma-continuum/fast-syntax-highlighting.git $ZDOTDIR/plugins/fast-syntax-highlighting
-	curl --create-dirs -O --output-dir ${XDG_CONFIG_HOME}/fsh https://raw.githubusercontent.com/catppuccin/zsh-fsh/main/themes/catppuccin-macchiato.ini # catppucin gang rise up !
-	fast-theme XDG:catppuccin-macchiato
+plug() {
+    # Extract the repository name from the URL
+	# The ${1:t} extracts the tail of the URL, which is typically the part after the last / (i.e., repo.git).
+	# The ${:r} removes the file extension, leaving the repository name (i.e., repo).
+    local repo_name="${1:t:r}"
+    # Clone the repository into the home directory under a directory named after the repo
+    git clone --depth=1 "$1" "$ZDOTDIR"/plugins/"$repo_name"
+	# Set the rebuild flag
 	requires_rebuild=True
+}
+
+if [[ ! -e $ZDOTDIR/plugins/fast-syntax-highlighting ]]; then
+	plug https://github.com/zdharma-continuum/fast-syntax-highlighting.git
+	curl --create-dirs -O --output-dir ${XDG_CONFIG_HOME}/fsh https://raw.githubusercontent.com/catppuccin/zsh-fsh/main/themes/catppuccin-macchiato.ini # catppucin gang rise up !
+	source $ZDOTDIR/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh # TODO: avoid sourcing twice
+	fast-theme XDG:catppuccin-macchiato
 fi
 if [[ ! -e $ZDOTDIR/plugins/zsh-autosuggestions ]]; then
-	git clone --depth=1 --recursive --shallow-submodules https://github.com/zsh-users/zsh-autosuggestions.git $ZDOTDIR/plugins/zsh-autosuggestions
-	requires_rebuild=True
+	plug https://github.com/zsh-users/zsh-autosuggestions.git
 fi
 if [[ ! -e $ZDOTDIR/plugins/powerlevel10k ]]; then
-	git clone --depth=1 --recursive --shallow-submodules https://github.com/romkatv/powerlevel10k.git $ZDOTDIR/plugins/powerlevel10k
-	requires_rebuild=True
+	plug https://github.com/romkatv/powerlevel10k.git
 fi
 if [[ ! -e $ZDOTDIR/plugins/fzf-tab ]]; then
-	git clone --depth=1  --recursive --shallow-submodules https://github.com/Aloxaf/fzf-tab.git $ZDOTDIR/plugins/fzf-tab # uses a pr for auto prefix matching
-	# git clone --depth=1 https://github.com/Aloxaf/fzf-tab.git $ZDOTDIR/plugins/fzf-tab # orginal
-	requires_rebuild=True
+	plug https://github.com/Aloxaf/fzf-tab.git
 fi
 if [[ ! -e $ZDOTDIR/plugins/fzf-tab-source ]]; then
-	git clone --depth=1 --recursive --shallow-submodules https://github.com/Freed-Wu/fzf-tab-source.git $ZDOTDIR/plugins/fzf-tab-source
-	requires_rebuild=True
+	plug https://github.com/Magniquick/fzf-tab-source.git
 fi
 if [[ ! -e $ZDOTDIR/plugins/zsh-completions ]]; then
-	git clone --depth=1 --recursive --shallow-submodules https://github.com/zsh-users/zsh-completions.git $ZDOTDIR/plugins/zsh-completions
-	requires_rebuild=True
+	plug https://github.com/zsh-users/zsh-completions.git
 fi
 if [[ ! -e $ZDOTDIR/plugins/clipboard ]]; then
-	git clone --depth=1 --recursive --shallow-submodules https://github.com/zpm-zsh/clipboard.git $ZDOTDIR/plugins/clipboard
+	plug https://github.com/zpm-zsh/clipboard.git 
 fi
-if [[ ! -e $ZDOTDIR/plugins/iterm2 ]] && [[ $TERM_PROGRAM = "iTerm.app" ]]; then
-	git clone --depth=1 --recursive --shallow-submodules https://github.com/gnachman/iTerm2-shell-integration.git $ZDOTDIR/plugins/iterm2
+if [[ ! -e $ZDOTDIR/plugins/iTerm2-shell-integration ]] && [[ $TERM_PROGRAM = "iTerm.app" ]]; then
+	plug https://github.com/gnachman/iTerm2-shell-integration.git
 fi
-
-
-if ! type fzf &>/dev/null; then
-	echo 'Warning: fzf is requried for the bundled fzf-tab plugin but was not found.'
-	echo 'Please install it.'
-fi
+unfunction plug
 
 if (( ${+requires_rebuild} )); then
 	rebuild
@@ -101,26 +101,30 @@ autoload -Uz compinit && compinit -u -d "${XDG_CACHE_HOME}/zsh/zcompcache/.zcomp
 
 source $ZDOTDIR/plugins/clipboard/clipboard.plugin.zsh
 
-export LESSOPEN="|$ZDOTDIR/lessfilter %s"
-setopt globdots
-zstyle ':completion:*' menu no
-zstyle ':fzf-tab:*' fzf-min-height 70
-zstyle ':completion:complete:*:argument-rest' sort false
-zstyle ':completion:*' file-sort modification
-zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}'  # case insensitive file matching
-# switch group using `,`
-zstyle ':fzf-tab:*' switch-group ','
-# set list-colors to enable filename colorizing 
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-source $ZDOTDIR/plugins/fzf-tab-source/fzf-tab-source.plugin.zsh
-source $ZDOTDIR/plugins/fzf-tab/fzf-tab.plugin.zsh
+if ! type fzf &>/dev/null; then
+	echo 'Warning: fzf is requried for the fzf-tab plugin but was not found.'
+else
+	export LESSOPEN="|$ZDOTDIR/lessfilter %s"
+	setopt globdots
+	zstyle ':completion:*' menu no
+	zstyle ':fzf-tab:*' fzf-min-height 70
+	zstyle ':completion:complete:*:argument-rest' sort false
+	zstyle ':completion:*' file-sort modification
+	zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}'  # case insensitive file matching
+	# switch group using `,`
+	zstyle ':fzf-tab:*' switch-group ','
+	# set list-colors to enable filename colorizing 
+	zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+	source $ZDOTDIR/plugins/fzf-tab-source/fzf-tab-source.plugin.zsh
+	source $ZDOTDIR/plugins/fzf-tab/fzf-tab.plugin.zsh
+fi
 
 ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 source $ZDOTDIR/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 if [[ $TERM_PROGRAM = "iTerm.app" ]]; then
-	source "$ZDOTDIR/plugins/iterm2/shell_integration/zsh"
+	source "$ZDOTDIR/plugins/iTerm2-shell-integration/shell_integration/zsh"
 elif [[ $TERM = "xterm-kitty" ]] && [[ -n $KITTY_INSTALLATION_DIR ]]; then
 	export KITTY_SHELL_INTEGRATION="enabled"
 	autoload -Uz -- "$KITTY_INSTALLATION_DIR"/shell-integration/zsh/kitty-integration

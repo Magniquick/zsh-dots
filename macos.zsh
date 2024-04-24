@@ -24,4 +24,3 @@ function man-preview() {
 	done
 }
 compdef _man man-preview
-
