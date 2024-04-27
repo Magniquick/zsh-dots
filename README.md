@@ -1,6 +1,6 @@
 # Zsh-dotfiles !
 Just my zsh dots : P \
-Designed to be as fast as humanly possible (benchmarked with [zsh-bench](https://github.com/romkatv/zsh-bench)), while having every sinlgle plugin you could dream of.
+Designed to be as fast as humanly possible (benchmarked with [zsh-bench](https://github.com/romkatv/zsh-bench)), while having every single plugin you could dream of.
 ## Setup:
 Clone this to ~/.config/zsh, and create/appened to /etc/zshenv with the the following -
 ```zsh
