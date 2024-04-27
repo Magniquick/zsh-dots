@@ -2,7 +2,7 @@
 Just my zsh dots : P \
 Designed to be as fast as humanly possible (benchmarked with [zsh-bench](https://github.com/romkatv/zsh-bench)), while having every single plugin you could dream of.
 ## Setup:
-Clone this to ~/.config/zsh, and create/appened to /etc/zshenv with the the following -
+Clone this to ~/.config/zsh, and create/appened to /etc/zshenv the the following -
 ```zsh
 export ZDOTDIR="$HOME"/.config/zsh
 ```
