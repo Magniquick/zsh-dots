@@ -1,6 +1,7 @@
 #!/bin/zsh
 
 # populate $PATH to be able to run stuff
+# see: https://docs.brew.sh/FAQ#why-should-i-install-homebrew-in-the-default-location
 if [[ -e /opt/homebrew ]]; then
 	HOMEBREW_PREFIX="/opt/homebrew"
 elif [[ -e /usr/local  ]]; then

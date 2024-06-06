@@ -45,10 +45,13 @@ WORDCHARS=${WORDCHARS/\/}
 bindkey "^[[A" history-beginning-search-backward
 bindkey "^[[B" history-beginning-search-forward
 
+# init zoxide
+_evalcache zoxide init zsh
+
 # atuin + zsh_autosuggest = <3
 if command -v atuin &> /dev/null; then
 	#eval "$(atuin init zsh --disable-up-arrow)"
-	source  $ZDOTDIR/init_atuin.zsh
+	_evalcache atuin init zsh --disable-up-arrow
 	_zsh_autosuggest_strategy_atuin_top() {
 			suggestion=$(ATUIN_QUERY="$1" atuin search --cmd-only -e 0 --limit 1 --search-mode prefix)
 	}
@@ -59,6 +62,7 @@ if command -v atuin &> /dev/null; then
 fi
 
 # https://hasseg.org/trash/
-# TODO: linux && check if tool exists 
-alias del="trash" 
-alias rm="echo Use 'del', or the full path i.e. '/bin/rm'"
+if command -v trash  &> /dev/null; then
+	alias del="trash" 
+	alias rm="echo Use 'del', or the full path i.e. $(whence -p rm)"
+fi

@@ -69,6 +69,9 @@ fi
 if [[ ! -e $ZDOTDIR/plugins/clipboard ]]; then
 	plug https://github.com/zpm-zsh/clipboard.git 
 fi
+if [[ ! -e $ZDOTDIR/plugins/evalcache ]]; then
+	plug https://github.com/mroth/evalcache.git
+fi
 if [[ ! -e $ZDOTDIR/plugins/iTerm2-shell-integration ]] && [[ $TERM_PROGRAM = "iTerm.app" ]]; then
 	plug https://github.com/gnachman/iTerm2-shell-integration.git
 fi
@@ -93,9 +96,10 @@ export LS_COLORS="*~=0;38;2;88;91;112:bd=0;38;2;116;199;236;48;2;49;50;68:ca=0:c
 fpath=($ZDOTDIR/plugins/zsh-completions/src $fpath)
 # Enable the "new" completion system (compsys).
 # Add plugins that change fpath above this - I nearly lost my sanity over this :/ 
+if [ ! -d "$XDG_CACHE_HOME/zsh" ]; then mkdir -p "$XDG_CACHE_HOME/zsh"; fi
 zstyle ':completion::complete:*' use-cache on
-zstyle ':completion::complete:*' cache-path "${XDG_CACHE_HOME}/zsh/zcompcache/"
-autoload -Uz compinit && compinit -u -d "${XDG_CACHE_HOME}/zsh/zcompcache/.zcompdump"
+zstyle ':completion::complete:*' cache-path "${XDG_CACHE_HOME}/zsh/"
+autoload -Uz compinit && compinit -u -d "${XDG_CACHE_HOME}/zsh/.zcompdump"
 
 source $ZDOTDIR/plugins/clipboard/clipboard.plugin.zsh
 
@@ -120,6 +124,8 @@ fi
 ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 source $ZDOTDIR/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+ZSH_EVALCACHE_DIR="$XDG_CACHE_HOME"/zsh-evalcache
+source $ZDOTDIR/plugins/evalcache/evalcache.plugin.zsh
 
 if [[ $TERM_PROGRAM = "iTerm.app" ]]; then
 	source "$ZDOTDIR/plugins/iTerm2-shell-integration/shell_integration/zsh"
@@ -130,7 +136,5 @@ elif [[ $TERM = "xterm-kitty" ]] && [[ -n $KITTY_INSTALLATION_DIR ]]; then
 	unfunction kitty-integration
 fi
 
-
 # To customize prompt, run `p10k configure` or edit $ZDOTDIR/p10k.zsh.
-[[ ! -f $ZDOTDIR/.p10k.zsh ]] || source $ZDOTDIR/.p10k.zsh
-source $ZDOTDIR/plugins/powerlevel10k/powerlevel10k.zsh-theme
+source $ZDOTDIR/.p10k.zsh ; source $ZDOTDIR/plugins/powerlevel10k/powerlevel10k.zsh-theme
