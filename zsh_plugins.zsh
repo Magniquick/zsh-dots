@@ -26,7 +26,7 @@ function rebuild() {
 	zcompile-many $ZDOTDIR/init_atuin.zsh &
 
 	#compinit
-	zcompile-many $XDG_CACHE_HOME/zsh/zcompcache/^(*.(zwc|old)) &
+	zcompile-many $XDG_CACHE_HOME/zsh/^(*.(zwc|old)) &
 
 	#and some more files too
 	zcompile-many $ZDOTDIR/zsh_plugins.sh $ZDOTDIR/macos.zsh &
@@ -122,6 +122,7 @@ else
 fi
 
 ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+zle_highlight+=(paste:none)
 source $ZDOTDIR/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 ZSH_EVALCACHE_DIR="$XDG_CACHE_HOME"/zsh-evalcache

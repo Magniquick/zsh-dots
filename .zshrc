@@ -18,6 +18,7 @@ setopt autocd
 setopt interactivecomments
 setopt histignorespace # better history. 
 setopt EXTENDED_GLOB # required for the rebuild function to work, plus it's nice !
+
 # python go brrr
 # TODO: venv.
 export PATH="/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"
@@ -53,11 +54,11 @@ if command -v atuin &> /dev/null; then
 	#eval "$(atuin init zsh --disable-up-arrow)"
 	_evalcache atuin init zsh --disable-up-arrow
 	_zsh_autosuggest_strategy_atuin_top() {
-			suggestion=$(ATUIN_QUERY="$1" atuin search --cmd-only -e 0 --limit 1 --search-mode prefix)
+		suggestion=$(ATUIN_QUERY="$1" atuin search --cmd-only -e 0 --limit 1 --search-mode prefix)
 	}
 	_zsh_autosuggest_strategy_atuin_currentdir() {
-				suggestion=$(ATUIN_QUERY="$1" atuin search --cmd-only -e 0 --limit 1 -c "$PWD" --search-mode prefix)
-		}
+		suggestion=$(ATUIN_QUERY="$1" atuin search --cmd-only -e 0 --limit 1 -c "$PWD" --search-mode prefix)
+	}
 	ZSH_AUTOSUGGEST_STRATEGY=(atuin_currentdir atuin_top completion)
 fi
 
