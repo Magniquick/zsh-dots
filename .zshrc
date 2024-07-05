@@ -29,12 +29,14 @@ export PATH="$HOME/.local/bin:$PATH"
 setopt PROMPT_SP
 export PROMPT_EOL_MARK=""
 
-export EDITOR="code -w" # TODO: something sane
+export EDITOR="nvim"
 export VISUAL="$EDITOR"
 
 # Some aliases
-alias ls='eza --icons=auto --hyperlink'
-alias lah='eza -lah --icons=auto --hyperlink'
+if (($+commands[eza])); then
+	alias ls='eza --icons=auto --hyperlink'
+	alias lah='eza -lah --icons=auto --hyperlink'
+fi
 
 # save your sanity a bit
 # fixes https://stackoverflow.com/questions/68442817/iterm2-alt-backspace-like-linux#comment120968426_68442817 in a neat way
@@ -46,12 +48,15 @@ WORDCHARS=${WORDCHARS/\/}
 bindkey "^[[A" history-beginning-search-backward
 bindkey "^[[B" history-beginning-search-forward
 
+# move around with ⌘ ← on mac
+bindkey "^[[1;9C" end-of-line
+bindkey "^[[1;9D" beginning-of-line
+
 # init zoxide
 _evalcache zoxide init zsh
 
 # atuin + zsh_autosuggest = <3
-if command -v atuin &> /dev/null; then
-	#eval "$(atuin init zsh --disable-up-arrow)"
+if (($+commands[atuin])); then
 	_evalcache atuin init zsh --disable-up-arrow
 	_zsh_autosuggest_strategy_atuin_top() {
 		suggestion=$(ATUIN_QUERY="$1" atuin search --cmd-only -e 0 --limit 1 --search-mode prefix)
@@ -63,7 +68,7 @@ if command -v atuin &> /dev/null; then
 fi
 
 # https://hasseg.org/trash/
-if command -v trash  &> /dev/null; then
+if (($+commands[trash])); then
 	alias del="trash" 
-	alias rm="echo Use 'del', or the full path i.e. $(whence -p rm)"
+	alias rm='echo "Use del, or the full path, i.e. $(whence -p rm)" && false'
 fi
