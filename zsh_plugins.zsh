@@ -29,7 +29,7 @@ function rebuild() {
 	zcompile-many $XDG_CACHE_HOME/zsh/^(*.(zwc|old)) &
 
 	#and some more files too
-	zcompile-many $ZDOTDIR/zsh_plugins.sh $ZDOTDIR/macos.zsh &
+	zcompile-many $ZDOTDIR/zsh_plugins.sh &
 	wait
 }
 
@@ -121,7 +121,7 @@ else
 	zstyle ':fzf-tab:*' switch-group ','
 	# set list-colors to enable filename colorizing 
 	zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-	if [[ $(uname -o) == *Darwin* || $(uname -o) == *Linux* ]]; then # absolutly broken on msys2
+	if [[ $OSTYPE = "msys" ]]; then # absolutly broken on msys2
 		source $ZDOTDIR/plugins/fzf-tab-source/fzf-tab-source.plugin.zsh
 	fi
 	source $ZDOTDIR/plugins/fzf-tab/fzf-tab.plugin.zsh
