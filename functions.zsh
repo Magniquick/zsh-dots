@@ -33,5 +33,5 @@ if [[ ${OSTYPE[1,6]} = "darwin" ]]; then
 	compdef _man man-preview
 fi
 
-alias jekyll-serve='docker run --name jekyll-serve --rm -p 4000:4000 -p 4020:4020 -v "$XDG_CACHE_HOME/bundle:/usr/local/bundle" -v $(pwd):/site jekyll-serve'
+alias jekyll-serve='docker run --name jekyll-serve --rm -p 4000:4000 -p 4040:4040 -v "$XDG_CACHE_HOME/bundle:/usr/local/bundle" -v $(pwd):/site jekyll-serve'
 alias jekyll-bash='docker run --name jekyll-serve --rm -v "$XDG_CACHE_HOME/bundle:/usr/local/bundle" -v $(pwd):/site -it --entrypoint bash jekyll-serve'

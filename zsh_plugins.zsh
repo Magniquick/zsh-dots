@@ -121,7 +121,8 @@ else
 	zstyle ':fzf-tab:*' switch-group ','
 	# set list-colors to enable filename colorizing 
 	zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-	if [[ $OSTYPE = "msys" ]]; then # absolutly broken on msys2
+	if [[ $OSTYPE != "msys" ]]; then # absolutly broken on msys2
+
 		source $ZDOTDIR/plugins/fzf-tab-source/fzf-tab-source.plugin.zsh
 	fi
 	source $ZDOTDIR/plugins/fzf-tab/fzf-tab.plugin.zsh

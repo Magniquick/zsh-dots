@@ -17,6 +17,7 @@ setopt autocd
 # interactive comments - dont you all talk to yourself ?
 setopt interactivecomments
 setopt histignorespace # better history. 
+setopt INC_APPEND_HISTORY # autosuggestions should work better 
 setopt EXTENDED_GLOB # required for the rebuild function to work, plus it's nice !
 
 # python go brrr
@@ -69,6 +70,6 @@ fi
 
 # https://hasseg.org/trash/
 if (($+commands[trash])); then
-	alias del="trash" 
+	alias del="trash"
 	alias rm='echo "Use del, or the full path, i.e. $(whence -p rm)" && false'
 fi
