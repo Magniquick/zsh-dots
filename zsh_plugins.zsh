@@ -107,7 +107,7 @@ autoload -Uz compinit && compinit -u -d "${XDG_CACHE_HOME}/zsh/.zcompdump"
 
 source $ZDOTDIR/plugins/clipboard/clipboard.plugin.zsh
 
-if ! type fzf &>/dev/null; then
+if ! (($+commands[fzf])); then
 	echo 'Warning: fzf is requried for the fzf-tab plugin but was not found.'
 else
 	export LESSOPEN="|$ZDOTDIR/lessfilter %s"
@@ -115,14 +115,13 @@ else
 	zstyle ':completion:*' menu no
 	zstyle ':fzf-tab:*' fzf-min-height 70
 	zstyle ':completion:complete:*:argument-rest' sort false
-	zstyle ':completion:*' file-sort modification
 	zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}'  # case insensitive file matching
+	zstyle ':completion:*' file-sort modification
 	# switch group using `,`
 	zstyle ':fzf-tab:*' switch-group ','
 	# set list-colors to enable filename colorizing 
 	zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 	if [[ $OSTYPE != "msys" ]]; then # absolutly broken on msys2
-
 		source $ZDOTDIR/plugins/fzf-tab-source/fzf-tab-source.plugin.zsh
 	fi
 	source $ZDOTDIR/plugins/fzf-tab/fzf-tab.plugin.zsh
@@ -135,13 +134,13 @@ source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 ZSH_EVALCACHE_DIR="$XDG_CACHE_HOME"/zsh-evalcache
 source $ZDOTDIR/plugins/evalcache/evalcache.plugin.zsh
 
-if [[ $TERM_PROGRAM = "iTerm.app" ]]; then
-	source "$ZDOTDIR/plugins/iTerm2-shell-integration/shell_integration/zsh"
-elif [[ $TERM = "xterm-kitty" ]] && [[ -n $KITTY_INSTALLATION_DIR ]]; then
+if [[ $TERM = "xterm-kitty" ]] && [[ -n $KITTY_INSTALLATION_DIR ]]; then
 	export KITTY_SHELL_INTEGRATION="enabled"
 	autoload -Uz -- "$KITTY_INSTALLATION_DIR"/shell-integration/zsh/kitty-integration
 	kitty-integration
 	unfunction kitty-integration
+elif [[ $TERM_PROGRAM = "iTerm.app" ]]; then
+	source "$ZDOTDIR/plugins/iTerm2-shell-integration/shell_integration/zsh"
 fi
 
 # To customize prompt, run `p10k configure` or edit $ZDOTDIR/p10k.zsh.
