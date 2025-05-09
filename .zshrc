@@ -1,28 +1,34 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
+
 # Based on https://github.com/romkatv/zsh-bench/blob/master/configs/diy%2B%2Bfsyh/skel/.zshrc, with additional modifications.
 
 # make paths unique
 # see: https://stackoverflow.com/a/68631155
 typeset -U PATH FPATH path fpath
 
+# https://unix.stackexchange.com/a/12108
+stty -ixon
+
 # enviorment setup of XDG stuff and $PATH, includes loading zsh plugins
 source $ZDOTDIR/env.zsh
 # random functions
 source $ZDOTDIR/functions.zsh
 
-# TRULY clear the history buffer
-# alias reset="clear && clear" dosent work : (
-# Auto cd ! 
+# Auto cd !
 setopt autocd
 # interactive comments - dont you all talk to yourself ?
 setopt interactivecomments
-setopt histignorespace # better history. 
-setopt INC_APPEND_HISTORY # autosuggestions should work better 
+setopt histignorespace # better history.
+setopt INC_APPEND_HISTORY # autosuggestions should work better
 setopt EXTENDED_GLOB # required for the rebuild function to work, plus it's nice !
+# History
+export HISTFILE="$ZDOTDIR/.histfile"
+export SAVEHIST=300000
+export HISTSIZE=$SAVEHIST
+setopt INC_APPEND_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt SHARE_HISTORY
 
-# python go brrr
-# TODO: venv.
-export PATH="/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
 # https://superuser.com/a/645612
@@ -30,13 +36,14 @@ export PATH="$HOME/.local/bin:$PATH"
 setopt PROMPT_SP
 export PROMPT_EOL_MARK=""
 
-export EDITOR="nvim"
+export EDITOR="code --wait"
 export VISUAL="$EDITOR"
 
 # Some aliases
 if (($+commands[eza])); then
 	alias ls='eza --icons=auto --hyperlink'
 	alias lah='eza -lah --icons=auto --hyperlink'
+	alias tree='eza --icons=auto --hyperlink --tree'
 fi
 
 # save your sanity a bit
@@ -45,13 +52,23 @@ fi
 WORDCHARS=${WORDCHARS/\/}
 
 # Arrow keys traverses history considiring inital input buffer
-# From https://unix.stackexchange.com/questions/16101/zsh-search-history-on-up-and-down-keys 
+# From https://unix.stackexchange.com/questions/16101/zsh-search-history-on-up-and-down-keys
 bindkey "^[[A" history-beginning-search-backward
 bindkey "^[[B" history-beginning-search-forward
 
 # move around with ⌘ ← on mac
-bindkey "^[[1;9C" end-of-line
 bindkey "^[[1;9D" beginning-of-line
+bindkey "^[[1;9C" end-of-line
+# and home and end too
+bindkey "^[[H" beginning-of-buffer-or-history
+bindkey "^[[F" end-of-buffer-or-history
+# and on linux (maybe windows too ?)
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
+bindkey "^[[1;3C" forward-word
+bindkey "^[[1;3D" backward-word
+bindkey "^H" backward-delete-word
+bindkey "^[[3~" delete-char
 
 # init zoxide
 _evalcache zoxide init zsh

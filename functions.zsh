@@ -1,4 +1,5 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
+
 # make mysql actually usable
 alias mysql-start='mysqld_safe && echo mysql has been started '
 mysql-connect() {

@@ -1,78 +1,80 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
+
+ZPLUGDIR="$ZDOTDIR/plugins"
+
 function zcompile-many() {
 	autoload -U zrecompile
 	local f
 	for f in "$@"; do zrecompile -pq "$f"; done
 }
 
-# For rebuildiing in case of updates.
+# For rebuilding in case of updates.
 function rebuild() {
 	echo "starting compile"
 	# Compile Powerlevel10k package
-	make -sC $ZDOTDIR/plugins/powerlevel10k pkg zwc &
+	make -sC $ZPLUGDIR/powerlevel10k pkg zwc &
 	zcompile-many $ZDOTDIR/.p10k.zsh &
 	zcompile-many $XDG_CACHE_HOME/p10k-instant-prompt-*.zsh &
-
+	
 	# Move and compile Fast Syntax Highlighting scripts
-	zcompile-many $ZDOTDIR/plugins/fast-syntax-highlighting/{fast*,.fast*,**/*.ch,**/*.zsh} &
+	zcompile-many $ZPLUGDIR/fast-syntax-highlighting/{fast*,.fast*,**/*.ch,**/*.zsh} &
 	
 	# Compile Zsh Autosuggestions scripts
-	zcompile-many $ZDOTDIR/plugins/zsh-autosuggestions/{*.zsh,src/**/*.zsh} &
-
-	# fzf-tab and friends. 
-	zcompile-many $ZDOTDIR/plugins/zsh-completions/{*.zsh,src/*} &
-	zcompile-many $ZDOTDIR/plugins/fzf-tab/*.zsh &
-	zcompile-many $ZDOTDIR/plugins/fzf-tab-source/{*.zsh,sources/*.zsh,functions/*.zsh} &
-	zcompile-many $ZDOTDIR/init_atuin.zsh &
-
+	zcompile-many $ZPLUGDIR/zsh-autosuggestions/{*.zsh,src/**/*.zsh} &
+	
+	# fzf-tab and friends.
+	zcompile-many $ZPLUGDIR/zsh-completions/{*.zsh,src/*} &
+	zcompile-many $ZPLUGDIR/fzf-tab/*.zsh &
+	zcompile-many $ZPLUGDIR/fzf-tab-source/{*.zsh,sources/*.zsh,functions/*.zsh} &
+	
 	#compinit
 	zcompile-many $XDG_CACHE_HOME/zsh/^(*.(zwc|old)) &
-
+	
 	#and some more files too
-	zcompile-many $ZDOTDIR/zsh_plugins.sh &
+	zcompile-many $ZDOTDIR/zsh_plugins.zsh &
 	wait
 }
 
 # Clone and compile to wordcode missing plugins.
 plug() {
-    # Extract the repository name from the URL
+	# Extract the repository name from the URL
 	# The ${1:t} extracts the tail of the URL, which is typically the part after the last / (i.e., repo.git).
 	# The ${:r} removes the file extension, leaving the repository name (i.e., repo).
-    local repo_name="${1:t:r}"
-    # Clone the repository into the home directory under a directory named after the repo
-    git clone --depth=1 "$1" "$ZDOTDIR"/plugins/"$repo_name"
+	local repo_name="${1:t:r}"
+	# Clone the repository into the home directory under a directory named after the repo
+	git clone --depth=1 "$1" ZDOTDIR/plugins/"$repo_name"
 	# Set the rebuild flag
 	requires_rebuild=True
 }
 
-if [[ ! -e $ZDOTDIR/plugins/fast-syntax-highlighting ]]; then
+if [[ ! -e $ZPLUGDIR/fast-syntax-highlighting ]]; then
 	plug https://github.com/zdharma-continuum/fast-syntax-highlighting.git
 	curl --create-dirs -O --output-dir ${XDG_CONFIG_HOME}/fsh https://raw.githubusercontent.com/catppuccin/zsh-fsh/main/themes/catppuccin-mocha.ini # catppucin gang rise up !
-	source $ZDOTDIR/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh # TODO: avoid sourcing twice
+	source $ZPLUGDIR/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 	fast-theme XDG:catppuccin-mocha
 fi
-if [[ ! -e $ZDOTDIR/plugins/zsh-autosuggestions ]]; then
+if [[ ! -e $ZPLUGDIR/zsh-autosuggestions ]]; then
 	plug https://github.com/zsh-users/zsh-autosuggestions.git
 fi
-if [[ ! -e $ZDOTDIR/plugins/powerlevel10k ]]; then
+if [[ ! -e $ZPLUGDIR/powerlevel10k ]]; then
 	plug https://github.com/romkatv/powerlevel10k.git
 fi
-if [[ ! -e $ZDOTDIR/plugins/fzf-tab ]]; then
+if [[ ! -e $ZPLUGDIR/fzf-tab ]]; then
 	plug https://github.com/Aloxaf/fzf-tab.git
 fi
-if [[ ! -e $ZDOTDIR/plugins/fzf-tab-source ]]; then
+if [[ ! -e $ZPLUGDIR/fzf-tab-source ]]; then
 	plug https://github.com/Magniquick/fzf-tab-source.git
 fi
-if [[ ! -e $ZDOTDIR/plugins/zsh-completions ]]; then
+if [[ ! -e $ZPLUGDIR/zsh-completions ]]; then
 	plug https://github.com/zsh-users/zsh-completions.git
 fi
-if [[ ! -e $ZDOTDIR/plugins/clipboard ]]; then
-	plug https://github.com/zpm-zsh/clipboard.git 
+if [[ ! -e $ZPLUGDIR/clipboard ]]; then
+	plug https://github.com/zpm-zsh/clipboard.git
 fi
-if [[ ! -e $ZDOTDIR/plugins/evalcache ]]; then
+if [[ ! -e $ZPLUGDIR/evalcache ]]; then
 	plug https://github.com/mroth/evalcache.git
 fi
-if [[ ! -e $ZDOTDIR/plugins/iTerm2-shell-integration ]] && [[ $TERM_PROGRAM = "iTerm.app" ]]; then
+if [[ ! -e $ZPLUGDIR/iTerm2-shell-integration ]] && [[ $TERM_PROGRAM = "iTerm.app" ]]; then
 	plug https://github.com/gnachman/iTerm2-shell-integration.git
 fi
 unfunction plug
@@ -97,15 +99,15 @@ fi
 
 # Load plugins.
 # https://github.com/Aloxaf/fzf-tab?tab=readme-ov-file#install -> fzf-tab after compinit, before zsh plugins which warp widgets
-fpath=($ZDOTDIR/plugins/zsh-completions/src $fpath)
+fpath=($ZPLUGDIR/zsh-completions/src $fpath)
 # Enable the "new" completion system (compsys).
-# Add plugins that change fpath above this - I nearly lost my sanity over this :/ 
+# Add plugins that change fpath above this - I nearly lost my sanity over this :/
 if [ ! -d "$XDG_CACHE_HOME/zsh" ]; then mkdir -p "$XDG_CACHE_HOME/zsh"; fi
 zstyle ':completion::complete:*' use-cache on
 zstyle ':completion::complete:*' cache-path "${XDG_CACHE_HOME}/zsh/"
 autoload -Uz compinit && compinit -u -d "${XDG_CACHE_HOME}/zsh/.zcompdump"
 
-source $ZDOTDIR/plugins/clipboard/clipboard.plugin.zsh
+source $ZPLUGDIR/clipboard/clipboard.plugin.zsh
 
 if ! (($+commands[fzf])); then
 	echo 'Warning: fzf is requried for the fzf-tab plugin but was not found.'
@@ -119,20 +121,18 @@ else
 	zstyle ':completion:*' file-sort modification
 	# switch group using `,`
 	zstyle ':fzf-tab:*' switch-group ','
-	# set list-colors to enable filename colorizing 
+	# set list-colors to enable filename colorizing
 	zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-	if [[ $OSTYPE != "msys" ]]; then # absolutly broken on msys2
-		source $ZDOTDIR/plugins/fzf-tab-source/fzf-tab-source.plugin.zsh
-	fi
-	source $ZDOTDIR/plugins/fzf-tab/fzf-tab.plugin.zsh
+	source $ZPLUGDIR/fzf-tab-source/fzf-tab-source.plugin.zsh
+	source $ZPLUGDIR/fzf-tab/fzf-tab.plugin.zsh
 fi
 
 ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 zle_highlight+=(paste:none)
-source $ZDOTDIR/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $ZPLUGDIR/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
+source $ZPLUGDIR/zsh-autosuggestions/zsh-autosuggestions.zsh
 ZSH_EVALCACHE_DIR="$XDG_CACHE_HOME"/zsh-evalcache
-source $ZDOTDIR/plugins/evalcache/evalcache.plugin.zsh
+source $ZPLUGDIR/evalcache/evalcache.plugin.zsh
 
 if [[ $TERM = "xterm-kitty" ]] && [[ -n $KITTY_INSTALLATION_DIR ]]; then
 	export KITTY_SHELL_INTEGRATION="enabled"
@@ -140,8 +140,8 @@ if [[ $TERM = "xterm-kitty" ]] && [[ -n $KITTY_INSTALLATION_DIR ]]; then
 	kitty-integration
 	unfunction kitty-integration
 elif [[ $TERM_PROGRAM = "iTerm.app" ]]; then
-	source "$ZDOTDIR/plugins/iTerm2-shell-integration/shell_integration/zsh"
+	source "$ZPLUGDIR/iTerm2-shell-integration/shell_integration/zsh"
 fi
 
 # To customize prompt, run `p10k configure` or edit $ZDOTDIR/p10k.zsh.
-source $ZDOTDIR/.p10k.zsh ; source $ZDOTDIR/plugins/powerlevel10k/powerlevel10k.zsh-theme
+source $ZDOTDIR/.p10k.zsh ; source $ZPLUGDIR/powerlevel10k/powerlevel10k.zsh-theme
