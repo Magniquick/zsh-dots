@@ -1,0 +1,33 @@
+[submodule "ZPLUGDIR/fast-syntax-highlighting"]
+	path = ZPLUGDIR/fast-syntax-highlighting
+	url = https://github.com/zdharma-continuum/fast-syntax-highlighting.git
+[submodule "ZPLUGDIR/zsh-autosuggestions"]
+	path = ZPLUGDIR/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions.git
+[submodule "plugins/fast-syntax-highlighting"]
+	path = plugins/fast-syntax-highlighting
+	url = https://github.com/zdharma-continuum/fast-syntax-highlighting.git
+[submodule "plugins/zsh-autosuggestions"]
+	path = plugins/zsh-autosuggestions
+	url = https://github.com/zsh-users/zsh-autosuggestions.git
+[submodule "plugins/powerlevel10k"]
+	path = plugins/powerlevel10k
+	url = https://github.com/romkatv/powerlevel10k.git
+[submodule "plugins/fzf-tab"]
+	path = plugins/fzf-tab
+	url = https://github.com/Aloxaf/fzf-tab.git
+[submodule "plugins/fzf-tab-source"]
+	path = plugins/fzf-tab-source
+	url = https://github.com/Magniquick/fzf-tab-source.git
+[submodule "plugins/zsh-completions"]
+	path = plugins/zsh-completions
+	url = https://github.com/zsh-users/zsh-completions.git
+[submodule "plugins/clipboard"]
+	path = plugins/clipboard
+	url = https://github.com/zpm-zsh/clipboard.git
+[submodule "plugins/evalcache"]
+	path = plugins/evalcache
+	url = https://github.com/mroth/evalcache.git
+[submodule "/home/magni/.config/zsh/plugins/iTerm2-shell-integration"]
+	path = plugins/iTerm2-shell-integration
+	url = https://github.com/gnachman/iTerm2-shell-integration.git

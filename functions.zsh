@@ -1,6 +1,9 @@
 #!/usr/bin/env zsh
 
 # make mysql actually usable
+
+alias zsh_setup="source $ZDOTDIR/setup.zsh && echo 'Updated zsh config.'"
+
 alias mysql-start='mysqld_safe && echo mysql has been started '
 mysql-connect() {
 	if  ! mysqladmin -u root ping -h localhost --silent; then

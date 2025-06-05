@@ -33,6 +33,7 @@ source $ZDOTDIR/zsh_plugins.zsh
 # export PYTHONSTARTUP="$XDG_CONFIG_HOME"/python/pythonrc
 export PYTHON_HISTORY="$HOME"/.local/state/python_history
 export CARGO_HOME="$XDG_DATA_HOME"/cargo
+export LESSHISTFILE="$XDG_STATE_HOME"/less/history
 
 autoload -Uz add-zsh-hook
 
@@ -47,5 +48,3 @@ chpwd_autosource_venv() {
 }
 
 add-zsh-hook chpwd chpwd_autosource_venv
-
-export LESSHISTFILE="$XDG_STATE_HOME"/less/history

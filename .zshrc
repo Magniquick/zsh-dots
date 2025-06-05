@@ -60,8 +60,12 @@ bindkey "^[[B" history-beginning-search-forward
 bindkey "^[[1;9D" beginning-of-line
 bindkey "^[[1;9C" end-of-line
 # and home and end too
-bindkey "^[[H" beginning-of-buffer-or-history
-bindkey "^[[F" end-of-buffer-or-history
+bindkey "^[[H" beginning-of-line
+bindkey "^[[F" end-of-line
+# and page up and down
+#TODO: fix this stuff
+bindkey "^[[5~" beginning-of-buffer
+bindkey "^[[6~" end-of-buffer
 # and on linux (maybe windows too ?)
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
