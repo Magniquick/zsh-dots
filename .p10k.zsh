@@ -248,7 +248,7 @@ POWERLEVEL9K_TERM_SHELL_INTEGRATION=true
 
   # If p10k is already loaded, reload configuration.
   # This works even with POWERLEVEL9K_DISABLE_HOT_RELOAD=true.
-  (( ! $+functions[p10k] )) || p10k reload
+  # (( ! $+functions[p10k] )) || p10k reload
 }
 typeset -g POWERLEVEL9K_CONFIG_FILE=${${(%):-%x}:a}
 (( ${#p10k_config_opts} )) && setopt ${p10k_config_opts[@]}

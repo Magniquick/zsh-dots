@@ -62,5 +62,9 @@ elif [[ $TERM_PROGRAM = "iTerm.app" ]]; then
 	source "$ZPLUGDIR/iTerm2-shell-integration/shell_integration/zsh"
 fi
 
-# To customize prompt, run `p10k configure` or edit $ZDOTDIR/p10k.zsh.
-source $ZDOTDIR/.p10k.zsh ; source $ZPLUGDIR/powerlevel10k/powerlevel10k.zsh-theme
+if [[ "${TTY[1,9]}" == "/dev/pts/" ]]; then
+	# To customize prompt, run `p10k configure` or edit $ZDOTDIR/p10k.zsh.
+	source $ZDOTDIR/.p10k.zsh ; source $ZPLUGDIR/powerlevel10k/powerlevel10k.zsh-theme
+else
+	export PROMPT='[%n@%m %~]%(!.#.$) '
+fi

@@ -1,5 +1,17 @@
 #!/usr/bin/env zsh
 # For rebuilding in case of updates.
+#!/bin/bash
+
+# Check if XDG_CONFIG_HOME is set
+if [ -z "$XDG_CONFIG_HOME" ]; then
+	echo "XDG_CONFIG_HOME is not set. Setting up enviorment.d file..."
+	mkdir -p "$HOME/.config/environment.d"
+	curl -o "$HOME/.config/environment.d/xdg.conf" https://raw.githubusercontent.com/Magniquick/dotfiles/refs/heads/main/dot_config/environment.d/xdg.conf
+
+	echo "File downloaded to $HOME/.config/environment.d/xdg.conf"
+	exec zsh
+fi
+
 pushd $ZDOTDIR &> /dev/null || exit 1
 function zcompile-many() {
 	autoload -U zrecompile
@@ -32,11 +44,11 @@ function rebuild() {
 }
 # run updates
 git pull
-git submodule update --init --recursive
+git submodule update --init --remote
 rebuild # rebuild zsh plugins
 if [[ ! -e $XDG_CONFIG_HOME/fsh/catppuccin-mocha.ini ]]; then
-    curl --create-dirs -O --output-dir $XDG_CONFIG_HOME/fsh https://raw.githubusercontent.com/catppuccin/zsh-fsh/main/themes/catppuccin-mocha.ini # catppucin gang rise up !
-    fast-theme XDG:catppuccin-mocha
+	curl --create-dirs -O --output-dir $XDG_CONFIG_HOME/fsh https://raw.githubusercontent.com/catppuccin/zsh-fsh/main/themes/catppuccin-mocha.ini # catppucin gang rise up !
+	fast-theme XDG:catppuccin-mocha
 fi
 wait # wait for all background jobs to finish
 popd

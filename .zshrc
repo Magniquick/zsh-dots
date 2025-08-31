@@ -36,8 +36,14 @@ export PATH="$HOME/.local/bin:$PATH"
 setopt PROMPT_SP
 export PROMPT_EOL_MARK=""
 
-export EDITOR="code --wait"
-export VISUAL="$EDITOR"
+# Set preferred editor
+for editor in micro nano vim vi; do
+	if command -v "$editor" >/dev/null 2>&1; then
+		export EDITOR="$editor"
+		break
+	fi
+done
+export VISUAL="code --wait"
 
 # Some aliases
 if (($+commands[eza])); then
@@ -62,10 +68,21 @@ bindkey "^[[1;9C" end-of-line
 # and home and end too
 bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
+# Move cursor to the very beginning of the buffer
+zle_to_buffer_start() {
+  CURSOR=0
+}
+zle -N buffer-start zle_to_buffer_start
+
+# Move cursor to the very end of the buffer
+zle_to_buffer_end() {
+  CURSOR=${#BUFFER}
+}
+zle -N buffer-end zle_to_buffer_end
+
 # and page up and down
-#TODO: fix this stuff
-bindkey "^[[5~" beginning-of-buffer
-bindkey "^[[6~" end-of-buffer
+bindkey '^[[5~' buffer-start  # PageUp
+bindkey '^[[6~' buffer-end    # PageDown
 # and on linux (maybe windows too ?)
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
