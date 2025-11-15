@@ -1,6 +1,5 @@
 #!/usr/bin/env zsh
 # For rebuilding in case of updates.
-#!/bin/bash
 
 # Check if XDG_CONFIG_HOME is set
 if [ -z "$XDG_CONFIG_HOME" ]; then
@@ -12,7 +11,7 @@ if [ -z "$XDG_CONFIG_HOME" ]; then
 	exec zsh
 fi
 
-pushd $ZDOTDIR &> /dev/null || exit 1
+pushd $ZDOTDIR &> /dev/null || return 1
 function zcompile-many() {
 	autoload -U zrecompile
 	local f

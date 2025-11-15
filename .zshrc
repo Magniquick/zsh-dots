@@ -12,8 +12,8 @@ stty -ixon
 # enviorment setup of XDG stuff and $PATH, includes loading zsh plugins
 source $ZDOTDIR/env.zsh
 source $ZDOTDIR/xdg.sh
-# random functions
-source $ZDOTDIR/functions.zsh
+# random stuff
+source $ZDOTDIR/random.zsh
 
 # Auto cd !
 setopt autocd

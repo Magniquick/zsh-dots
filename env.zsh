@@ -30,13 +30,29 @@ source $ZDOTDIR/zsh_plugins.zsh
 
 autoload -Uz add-zsh-hook
 
+typeset -g AUTO_VENV_ACTIVE=""
+
 chpwd_autosource_venv() {
+	local abs_pwd="${PWD:A}"
+	local venv_dir=""
+
 	if [[ -d .venv ]]; then
-		if [[ -n "$VIRTUAL_ENV" ]]; then
-			deactivate
+		venv_dir="$abs_pwd/.venv"
+	fi
+
+	if [[ -n "$venv_dir" ]]; then
+		if [[ "$VIRTUAL_ENV" != "$venv_dir" ]]; then
+			if [[ -n "$VIRTUAL_ENV" ]] && (( $+functions[deactivate] )); then
+				deactivate
+			fi
+			source "$venv_dir/bin/activate"
+			AUTO_VENV_ACTIVE="$VIRTUAL_ENV"
+			echo "Activated virtual environment in $(pwd)"
 		fi
-		source .venv/bin/activate
-		echo "Activated virtual environment in $(pwd)"
+	elif [[ -n "$VIRTUAL_ENV" ]] && [[ "$AUTO_VENV_ACTIVE" = "$VIRTUAL_ENV" ]] && (( $+functions[deactivate] )); then
+		deactivate
+		AUTO_VENV_ACTIVE=""
+		echo "Deactivated virtual environment"
 	fi
 }
 

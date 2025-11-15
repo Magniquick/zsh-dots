@@ -25,6 +25,8 @@ topgrade() {
 	command topgrade "$@" && rebuild # rebuilds zsh plugins after being pulled from github.
 }
 
+eval $(codex completion zsh)
+
 if [[ ${OSTYPE[1,6]} = "darwin" ]]; then
 	function man-preview() {
 		[[ $# -eq 0 ]] && >&2 echo "Usage: $0 command1 [command2 ...]" && return 1
