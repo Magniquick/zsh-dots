@@ -11,6 +11,7 @@ stty -ixon
 
 # enviorment setup of XDG stuff and $PATH, includes loading zsh plugins
 source $ZDOTDIR/env.zsh
+source $ZDOTDIR/xdg.sh
 # random functions
 source $ZDOTDIR/functions.zsh
 
@@ -29,7 +30,8 @@ setopt INC_APPEND_HISTORY
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt SHARE_HISTORY
 
-export PATH="$HOME/.local/bin:$PATH"
+# add custom bin dir and local bin (for uv) to path
+export PATH="$HOME/.local/bin/custom:$HOME/.local/bin:$PATH"
 
 # https://superuser.com/a/645612
 # setopt PROMPT_CR - breaks p10k, the fix still works too without this.
@@ -38,12 +40,19 @@ export PROMPT_EOL_MARK=""
 
 # Set preferred editor
 for editor in micro nano vim vi; do
-	if command -v "$editor" >/dev/null 2>&1; then
+	if (($+commands[$editor])); then
 		export EDITOR="$editor"
 		break
 	fi
 done
-export VISUAL="code --wait"
+for visual in "code --wait" "subl" "vim" "nano"; do
+  	cmd=${visual%% *}
+	if (($+commands[$cmd])); then
+		export VISUAL="$visual"
+		break
+	fi
+done
+
 
 # Some aliases
 if (($+commands[eza])); then
@@ -69,15 +78,11 @@ bindkey "^[[1;9C" end-of-line
 bindkey "^[[H" beginning-of-line
 bindkey "^[[F" end-of-line
 # Move cursor to the very beginning of the buffer
-zle_to_buffer_start() {
-  CURSOR=0
-}
+zle_to_buffer_start() { CURSOR=0 }
 zle -N buffer-start zle_to_buffer_start
 
 # Move cursor to the very end of the buffer
-zle_to_buffer_end() {
-  CURSOR=${#BUFFER}
-}
+zle_to_buffer_end() { CURSOR=${#BUFFER} }
 zle -N buffer-end zle_to_buffer_end
 
 # and page up and down
@@ -92,11 +97,12 @@ bindkey "^H" backward-delete-word
 bindkey "^[[3~" delete-char
 
 # init zoxide
-_evalcache zoxide init zsh
+eval "$(zoxide init zsh)"
 
 # atuin + zsh_autosuggest = <3
 if (($+commands[atuin])); then
-	_evalcache atuin init zsh --disable-up-arrow
+	#_evalcache atuin init zsh --disable-up-arrow
+	eval "$(atuin init zsh --disable-up-arrow)"
 	_zsh_autosuggest_strategy_atuin_top() {
 		suggestion=$(ATUIN_QUERY="$1" atuin search --cmd-only -e 0 --limit 1 --search-mode prefix)
 	}
@@ -106,8 +112,17 @@ if (($+commands[atuin])); then
 	ZSH_AUTOSUGGEST_STRATEGY=(atuin_currentdir atuin_top completion)
 fi
 
-# https://hasseg.org/trash/
-if (($+commands[trash])); then
-	alias del="trash"
+if (($+commands[gio])); then
+	export TRASH_CMD="gio trash"
+elif (($+commands[gtrash])); then
+	export TRASH_CMD="gtrash put"
+elif (($+commands[trash])); then
+	export TRASH_CMD="trash"
+elif (($+commands[trash-put])); then # trash-cli
+	export TRASH_CMD="trash-put"
+fi
+
+if [[ -n "$TRASH_CMD" ]]; then
+	alias del="$TRASH_CMD"
 	alias rm='echo "Use del, or the full path, i.e. $(whence -p rm)" && false'
 fi

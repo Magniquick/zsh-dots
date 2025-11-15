@@ -2,8 +2,20 @@
 
 ZPLUGDIR="$ZDOTDIR/plugins"
 
+#TODO: use _evalcache for the following sources?
+if [[ $TERM_PROGRAM = "vscode" ]]; then
+	# source vscode shell integration at the end to avoid conflicts with instant prompt
+	if [[ -e /opt/visual-studio-code/resources/app/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-rc.zsh ]]; then
+		source /opt/visual-studio-code/resources/app/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-rc.zsh
+	else
+		# fallbaack if we cant find it there
+		echo "Sourcing VSCode shell integration via code command - may be slower"
+		source "$(code --locate-shell-integration-path zsh)"
+	fi
+fi
+
 # Activate Powerlevel10k Instant Prompt.
-# Try to move all possible commands below this (make sure there is no output by the commands).
+# Try to move all possible commands below this (makeedirect, url_for sure there is no output by the commands).
 if [[ -r "${XDG_CACHE_HOME}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
 	source "${XDG_CACHE_HOME}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
@@ -24,7 +36,24 @@ fpath=($ZPLUGDIR/zsh-completions/src $fpath)
 if [ ! -d "$XDG_CACHE_HOME/zsh" ]; then mkdir -p "$XDG_CACHE_HOME/zsh"; fi
 zstyle ':completion::complete:*' use-cache on
 zstyle ':completion::complete:*' cache-path "${XDG_CACHE_HOME}/zsh/"
-autoload -Uz compinit && compinit -u -d "${XDG_CACHE_HOME}/zsh/.zcompdump"
+
+# stolen from https://github.com/sorin-ionescu/prezto/blob/7b3b798eb5038eb05938399f245fa643c630a7f1/modules/completion/init.zsh#L53
+# Load and initialize the completion system ignoring insecure directories with a
+# cache time of 24 hours, so it should almost always regenerate the first time a
+# shell is opened each day.
+autoload -Uz compinit
+_comp_path="${XDG_CACHE_HOME}/zsh/zcompdump"
+# #q expands globs in conditional expressions
+if [[ $_comp_path(#qNmh-24) ]]; then
+  # -C (skip function check) implies -i (skip security check).
+  compinit -C -d "$_comp_path"
+else
+  mkdir -p "$_comp_path:h"
+  compinit -i -d "$_comp_path"
+  # Keep $_comp_path younger than cache time even if it isn't regenerated.
+  touch "$_comp_path"
+fi
+unset _comp_path
 
 source $ZPLUGDIR/clipboard/clipboard.plugin.zsh
 
