@@ -1,16 +1,6 @@
 #!/usr/bin/env zsh
 # For rebuilding in case of updates.
 
-# Check if XDG_CONFIG_HOME is set
-if [ -z "$XDG_CONFIG_HOME" ]; then
-	echo "XDG_CONFIG_HOME is not set. Setting up enviorment.d file..."
-	mkdir -p "$HOME/.config/environment.d"
-	curl -o "$HOME/.config/environment.d/xdg.conf" https://raw.githubusercontent.com/Magniquick/dotfiles/refs/heads/main/dot_config/environment.d/xdg.conf
-
-	echo "File downloaded to $HOME/.config/environment.d/xdg.conf"
-	exec zsh
-fi
-
 pushd $ZDOTDIR &> /dev/null || return 1
 function zcompile-many() {
 	autoload -U zrecompile

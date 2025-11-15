@@ -1,5 +1,6 @@
 #!/usr/bin/env zsh 
-# shellcheck disable=SC1071
+
+# all XDG* stuff should have been set by env.zsh
 
 # Android
 export ANDROID_USER_HOME="$XDG_DATA_HOME"/android

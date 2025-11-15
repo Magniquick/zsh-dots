@@ -25,7 +25,16 @@
 
 # fi
 
-# source the plugins first, so that p10k instant prompt kicks in
+# Lets just set them here if they arent set already
+XDG_DATA_HOME=${XDG_DATA_HOME:-$HOME/.local/share}
+XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
+XDG_STATE_HOME=${XDG_STATE_HOME:-$HOME/.local/state}
+XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
+XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/$UID}
+XDG_DATA_DIRS=${XDG_DATA_DIRS:-/usr/local/share:/usr/share}
+LANG=${LANG:-en_US.UTF-8}
+
+# source the plugins next, so that p10k instant prompt kicks in
 source $ZDOTDIR/zsh_plugins.zsh
 
 autoload -Uz add-zsh-hook

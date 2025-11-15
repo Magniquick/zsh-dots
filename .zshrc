@@ -11,7 +11,7 @@ stty -ixon
 
 # enviorment setup of XDG stuff and $PATH, includes loading zsh plugins
 source $ZDOTDIR/env.zsh
-source $ZDOTDIR/xdg.sh
+source $ZDOTDIR/xdg.zsh
 # random stuff
 source $ZDOTDIR/random.zsh
 
@@ -94,6 +94,8 @@ bindkey "^[[1;5D" backward-word
 bindkey "^[[1;3C" forward-word
 bindkey "^[[1;3D" backward-word
 bindkey "^H" backward-delete-word
+bindkey "^[[3;5~" kill-word
+bindkey "^[[3;3~" kill-word
 bindkey "^[[3~" delete-char
 
 # init zoxide
@@ -101,7 +103,6 @@ eval "$(zoxide init zsh)"
 
 # atuin + zsh_autosuggest = <3
 if (($+commands[atuin])); then
-	#_evalcache atuin init zsh --disable-up-arrow
 	eval "$(atuin init zsh --disable-up-arrow)"
 	_zsh_autosuggest_strategy_atuin_top() {
 		suggestion=$(ATUIN_QUERY="$1" atuin search --cmd-only -e 0 --limit 1 --search-mode prefix)
