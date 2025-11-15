@@ -104,13 +104,13 @@ eval "$(zoxide init zsh)"
 # atuin + zsh_autosuggest = <3
 if (($+commands[atuin])); then
 	eval "$(atuin init zsh --disable-up-arrow)"
+	_zsh_autosuggest_strategy_atuin_dir() {
+		suggestion=$(ATUIN_QUERY="$1" atuin search --cmd-only -e 0 --limit 1 --search-mode prefix -c "$PWD" 2> /dev/null)
+	}
 	_zsh_autosuggest_strategy_atuin_top() {
-		suggestion=$(ATUIN_QUERY="$1" atuin search --cmd-only -e 0 --limit 1 --search-mode prefix)
+		suggestion=$(ATUIN_QUERY="$1" atuin search --cmd-only -e 0 --limit 1 --search-mode prefix 2> /dev/null)
 	}
-	_zsh_autosuggest_strategy_atuin_currentdir() {
-		suggestion=$(ATUIN_QUERY="$1" atuin search --cmd-only -e 0 --limit 1 -c "$PWD" --search-mode prefix)
-	}
-	ZSH_AUTOSUGGEST_STRATEGY=(atuin_currentdir atuin_top completion)
+	ZSH_AUTOSUGGEST_STRATEGY=(atuin_dir atuin_top completion)
 fi
 
 if (($+commands[gio])); then
