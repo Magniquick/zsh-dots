@@ -119,7 +119,7 @@ elif (($+commands[gtrash])); then
 	export TRASH_CMD="gtrash put"
 elif (($+commands[trash])); then
 	export TRASH_CMD="trash"
-elif (($+commands[trash-put])); then # trash-cli
+elif (($+commands[trash-put])); then
 	export TRASH_CMD="trash-put"
 fi
 

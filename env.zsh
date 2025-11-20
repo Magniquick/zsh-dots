@@ -40,6 +40,8 @@ source $ZDOTDIR/zsh_plugins.zsh
 autoload -Uz add-zsh-hook
 
 typeset -g AUTO_VENV_ACTIVE=""
+# Track the directory whose .venv we auto-activated so children keep it alive
+typeset -g AUTO_VENV_DIR=""
 
 chpwd_autosource_venv() {
 	local abs_pwd="${PWD:A}"
@@ -56,12 +58,16 @@ chpwd_autosource_venv() {
 			fi
 			source "$venv_dir/bin/activate"
 			AUTO_VENV_ACTIVE="$VIRTUAL_ENV"
+			AUTO_VENV_DIR="$abs_pwd"
 			echo "Activated virtual environment in $(pwd)"
 		fi
 	elif [[ -n "$VIRTUAL_ENV" ]] && [[ "$AUTO_VENV_ACTIVE" = "$VIRTUAL_ENV" ]] && (( $+functions[deactivate] )); then
-		deactivate
-		AUTO_VENV_ACTIVE=""
-		echo "Deactivated virtual environment"
+		if [[ -z "$AUTO_VENV_DIR" ]] || { [[ "$abs_pwd" != "$AUTO_VENV_DIR" ]] && [[ "$abs_pwd" != "$AUTO_VENV_DIR"/* ]]; }; then
+			deactivate
+			AUTO_VENV_ACTIVE=""
+			AUTO_VENV_DIR=""
+			echo "Deactivated virtual environment"
+		fi
 	fi
 }
 

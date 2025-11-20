@@ -2,6 +2,38 @@
 # For rebuilding in case of updates.
 
 pushd $ZDOTDIR &> /dev/null || return 1
+
+function has_cmd() {
+	local opt
+	for opt in "$@"; do
+		(( $+commands[$opt] )) || return 1
+	done
+	return 0
+}
+
+function check_optional_dependencies() {
+	local -a missing
+	echo "Checking optional dependencies (atuin, kitty/iTerm2)..."
+
+	if ! has_cmd pdftoppm; then
+		missing+=("pdftoppm (better previews in less/fzf)")
+	fi
+	if ! has_cmd atuin; then
+		missing+=("atuin (syncable history integration)")
+	fi
+	if ! has_cmd kitty && [[ "$TERM_PROGRAM" != "iTerm.app" ]] && [[ ! -e "$HOME/.iterm2/imgcat" ]]; then
+		missing+=("kitty or iTerm2 for inline image previews")
+	fi
+
+	if (( ${#missing[@]} )); then
+		printf 'Missing optional dependencies:\n'
+		printf ' - %s\n' "${missing[@]}"
+		echo "See README.md for details on installing these extras."
+	else
+		echo "All optional dependencies are available."
+	fi
+}
+
 function zcompile-many() {
 	autoload -U zrecompile
 	local f
@@ -29,8 +61,11 @@ function rebuild() {
 	zcompile-many $XDG_CACHE_HOME/zsh/^(*.(zwc|old)) &
 	
 	#and some more files too
-	zcompile-many $ZDOTDIR/zsh_plugins.zsh &
+	zcompile-many $ZDOTDIR/{*.zsh,.zprofile,.zshrc} &
 }
+
+check_optional_dependencies
+
 # run updates
 git pull
 git submodule update --init --remote

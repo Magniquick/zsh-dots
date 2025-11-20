@@ -17,7 +17,7 @@ zsh_setup
 to setup optional theming, compiling, and other stuff.
 ## Requirements 
 Necessary - fzf. \
-Optional - timg, atutin, and preferably kitty/iTerm2.
+Optional - atutin, and preferably kitty/iTerm2.
 ## Contributing
 Open a issue, add the output of $TERM_PROGRAM and which format is used by your terminal on https://github.com/hzeller/timg to add image preview support there.
 Alternatively, add it to lessfilter and open a pr !
