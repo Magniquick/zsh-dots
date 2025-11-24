@@ -25,7 +25,7 @@ topgrade() {
 	command topgrade "$@" && rebuild # rebuilds zsh plugins after being pulled from github.
 }
 
-eval $(codex completion zsh)
+smartcache eval codex completion zsh
 
 if [[ ${OSTYPE[1,6]} = "darwin" ]]; then
 	function man-preview() {

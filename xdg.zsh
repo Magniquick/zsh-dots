@@ -6,6 +6,7 @@
 export ANDROID_USER_HOME="$XDG_DATA_HOME"/android
 
 adb() {
+	mkdir -p "$XDG_DATA_HOME/android"
     HOME="$XDG_DATA_HOME/android" command adb "$@"
 }
 

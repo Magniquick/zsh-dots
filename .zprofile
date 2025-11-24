@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 if uwsm check may-start; then
-	uwsm start hyprland.desktop
+	exec uwsm start hyprland.desktop > /dev/null # redirect success messages to the void
 fi
 
 set -a 

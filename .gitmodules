@@ -28,3 +28,6 @@
 [submodule "/home/magni/.config/zsh/plugins/iTerm2-shell-integration"]
 	path = plugins/iTerm2-shell-integration
 	url = https://github.com/gnachman/iTerm2-shell-integration.git
+[submodule "plugins/zsh-smartcache"]
+	path = plugins/zsh-smartcache
+	url = https://github.com/QuarticCat/zsh-smartcache.git
