@@ -12,7 +12,7 @@
 	url = https://github.com/zsh-users/zsh-autosuggestions.git
 [submodule "plugins/powerlevel10k"]
 	path = plugins/powerlevel10k
-	url = https://github.com/romkatv/powerlevel10k.git
+	url = https://github.com/Magniquick/powerlevel10k.git
 [submodule "plugins/fzf-tab"]
 	path = plugins/fzf-tab
 	url = https://github.com/Aloxaf/fzf-tab.git

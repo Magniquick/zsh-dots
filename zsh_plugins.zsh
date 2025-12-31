@@ -1,17 +1,34 @@
 #!/usr/bin/env zsh
+# Notes:
+# vscode-based intergration is set above the instant prompt activation as it sends OSC codes to the terminal, which p10k instant prompt requires us to place above it.
 
 ZPLUGDIR="$ZDOTDIR/plugins"
 
 if [[ $TERM_PROGRAM = "vscode" ]]; then
-	# source vscode shell integration at the end to avoid conflicts with instant prompt
-	if [[ -e /opt/visual-studio-code/resources/app/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-rc.zsh ]]; then
-		source /opt/visual-studio-code/resources/app/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-rc.zsh
+	# disable terminal.integrated.shellIntegration.enabled for this to work properly
+	# source vscode shell integration at the top to avoid conflicts with instant prompt
+	integration_path="resources/app/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-rc.zsh"
+	if [[ -e "/opt/visual-studio-code/$integration_path" ]]; then
+		source "/opt/visual-studio-code/$integration_path"
+	elif [[ -e "/opt/Antigravity/$integration_path" ]]; then
+		source "/opt/Antigravity/$integration_path"
 	else
 		# fallbaack if we cant find it there
-		echo "Sourcing VSCode shell integration via code command - may be slower"
-		source "$(code --locate-shell-integration-path zsh)"
+		echo "Sourcing VSCode shell integration via command - may be slower" >&2
+		if (($+commands[code])); then
+			source "$(code --locate-shell-integration-path zsh)"
+		elif (($+commands[antigravity])); then
+			source "$(antigravity --locate-shell-integration-path zsh)"
+		else
+			# maybe ssh or similar ? fallback to basic shell integration provided by p10k
+			# https://github.com/microsoft/vscode/issues/153400#issue-1286534600
+			ITERM_SHELL_INTEGRATION_INSTALLED="Yes"
+			# VSCODE_SHELL_INTEGRATION=1 also seems to work
+			echo "ERROR: could not find vscode or antigravity binaries" >&2
+		fi
 	fi
 fi
+
 
 # Activate Powerlevel10k Instant Prompt.
 # Try to move all possible commands below this (make sure there is no output by the commands).
@@ -67,12 +84,12 @@ else
 	zstyle ':completion:complete:*:*' sort false
 	zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}'  # case insensitive file matching
 	zstyle ':completion:*' file-sort modification
-	# switch group using `,`
 	# set list-colors to enable filename colorizing
 	zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 	source $ZPLUGDIR/fzf-tab-source/fzf-tab-source.plugin.zsh
 	source $ZPLUGDIR/fzf-tab/fzf-tab.plugin.zsh
 	zstyle ':fzf-tab:*' fzf-min-height 70
+	# switch group using < and >
 	zstyle ':fzf-tab:*' switch-group '<' '>'
 fi
 
@@ -81,7 +98,8 @@ zle_highlight+=(paste:none)
 source $ZPLUGDIR/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 source $ZPLUGDIR/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-if [[ $TERM = "xterm-kitty" ]] && [[ -n $KITTY_INSTALLATION_DIR ]]; then
+# TODO: figure out why automatic shell intergration has broken title setting.
+if [[ -n $KITTY_INSTALLATION_DIR ]]; then
 	export KITTY_SHELL_INTEGRATION="enabled"
 	autoload -Uz -- "$KITTY_INSTALLATION_DIR"/shell-integration/zsh/kitty-integration
 	kitty-integration
@@ -92,7 +110,8 @@ fi
 
 if [[ "${TTY[1,9]}" == "/dev/pts/" ]]; then
 	# To customize prompt, run `p10k configure` or edit $ZDOTDIR/p10k.zsh.
-	source $ZDOTDIR/.p10k.zsh ; source $ZPLUGDIR/powerlevel10k/powerlevel10k.zsh-theme
-else
+	source $ZPLUGDIR/powerlevel10k/powerlevel10k.zsh-theme
+	source $ZDOTDIR/.p10k.zsh 
+else # init a basic prompt for tty sessions
 	export PROMPT='[%n@%m %~]%(!.#.$) '
 fi

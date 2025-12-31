@@ -30,8 +30,9 @@ setopt INC_APPEND_HISTORY
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt SHARE_HISTORY
 
-# add custom bin dir and local bin (for uv) to path
-export PATH="$HOME/.local/bin/custom:$HOME/.local/bin:$PATH"
+# update path.
+export UV_TOOL_BIN_DIR="$HOME/.local/share/uv/bin"
+export PATH="$UV_TOOL_BIN_DIR:$HOME/.local/share/cargo/bin:$HOME/.local/bin:$PATH"
 
 # https://superuser.com/a/645612
 # setopt PROMPT_CR - breaks p10k, the fix still works too without this.
@@ -45,7 +46,7 @@ for editor in micro nano vim vi; do
 		break
 	fi
 done
-for visual in "code --wait" "subl" "vim" "nano"; do
+for visual in "antigravity --wait" "code --wait" "subl" "vim" "nano"; do
   	cmd=${visual%% *}
 	if (($+commands[$cmd])); then
 		export VISUAL="$visual"

@@ -30,7 +30,6 @@ XDG_DATA_HOME=${XDG_DATA_HOME:-$HOME/.local/share}
 XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
 XDG_STATE_HOME=${XDG_STATE_HOME:-$HOME/.local/state}
 XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
-ZSH_SMARTCACHE_DIR=${ZSH_SMARTCACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}/zsh}
 XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/user/$UID}
 XDG_DATA_DIRS=${XDG_DATA_DIRS:-/usr/local/share:/usr/share}
 LANG=${LANG:-en_US.UTF-8}
@@ -38,38 +37,43 @@ LANG=${LANG:-en_US.UTF-8}
 # source the plugins next, so that p10k instant prompt kicks in
 source $ZDOTDIR/zsh_plugins.zsh
 
-autoload -Uz add-zsh-hook
 
-typeset -g AUTO_VENV_ACTIVE=""
-# Track the directory whose .venv we auto-activated so children keep it alive
-typeset -g AUTO_VENV_DIR=""
+# uv makes the following code absolutely unnecessary :D
+# also this is insecure if you cd into untrusted directories
 
-chpwd_autosource_venv() {
-	local abs_pwd="${PWD:A}"
-	local venv_dir=""
+# # Auto-activate Python virtual environments located in .venv directories
+# autoload -Uz add-zsh-hook
 
-	if [[ -d .venv ]]; then
-		venv_dir="$abs_pwd/.venv"
-	fi
+# typeset -g AUTO_VENV_ACTIVE=""
+# # Track the directory whose .venv we auto-activated so children keep it alive
+# typeset -g AUTO_VENV_DIR=""
 
-	if [[ -n "$venv_dir" ]]; then
-		if [[ "$VIRTUAL_ENV" != "$venv_dir" ]]; then
-			if [[ -n "$VIRTUAL_ENV" ]] && (( $+functions[deactivate] )); then
-				deactivate
-			fi
-			source "$venv_dir/bin/activate"
-			AUTO_VENV_ACTIVE="$VIRTUAL_ENV"
-			AUTO_VENV_DIR="$abs_pwd"
-			echo "Activated virtual environment in $(pwd)"
-		fi
-	elif [[ -n "$VIRTUAL_ENV" ]] && [[ "$AUTO_VENV_ACTIVE" = "$VIRTUAL_ENV" ]] && (( $+functions[deactivate] )); then
-		if [[ -z "$AUTO_VENV_DIR" ]] || { [[ "$abs_pwd" != "$AUTO_VENV_DIR" ]] && [[ "$abs_pwd" != "$AUTO_VENV_DIR"/* ]]; }; then
-			deactivate
-			AUTO_VENV_ACTIVE=""
-			AUTO_VENV_DIR=""
-			echo "Deactivated virtual environment"
-		fi
-	fi
-}
+# chpwd_autosource_venv() {
+# 	local abs_pwd="${PWD:A}"
+# 	local venv_dir=""
 
-add-zsh-hook chpwd chpwd_autosource_venv
+# 	if [[ -d .venv ]]; then
+# 		venv_dir="$abs_pwd/.venv"
+# 	fi
+
+# 	if [[ -n "$venv_dir" ]]; then
+# 		if [[ "$VIRTUAL_ENV" != "$venv_dir" ]]; then
+# 			if [[ -n "$VIRTUAL_ENV" ]] && (( $+functions[deactivate] )); then
+# 				deactivate
+# 			fi
+# 			source "$venv_dir/bin/activate"
+# 			AUTO_VENV_ACTIVE="$VIRTUAL_ENV"
+# 			AUTO_VENV_DIR="$abs_pwd"
+# 			echo "Activated virtual environment in $(pwd)"
+# 		fi
+# 	elif [[ -n "$VIRTUAL_ENV" ]] && [[ "$AUTO_VENV_ACTIVE" = "$VIRTUAL_ENV" ]] && (( $+functions[deactivate] )); then
+# 		if [[ -z "$AUTO_VENV_DIR" ]] || { [[ "$abs_pwd" != "$AUTO_VENV_DIR" ]] && [[ "$abs_pwd" != "$AUTO_VENV_DIR"/* ]]; }; then
+# 			deactivate
+# 			AUTO_VENV_ACTIVE=""
+# 			AUTO_VENV_DIR=""
+# 			echo "Deactivated virtual environment"
+# 		fi
+# 	fi
+# }
+
+# add-zsh-hook chpwd chpwd_autosource_venv

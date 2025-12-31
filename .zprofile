@@ -5,7 +5,7 @@ if uwsm check may-start; then
 fi
 
 set -a 
-for f in $HOME/.config/environment.d/*.conf; do
-	[ -r "$f" ] || continue; source "$f"
-done
+. /dev/fd/0 <<EOF
+$(/usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generator)
+EOF
 set +a
