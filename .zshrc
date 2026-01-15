@@ -95,6 +95,7 @@ bindkey "^[[1;5D" backward-word
 bindkey "^[[1;3C" forward-word
 bindkey "^[[1;3D" backward-word
 bindkey "^H" backward-delete-word
+bindkey "^[^?" backward-delete-word
 bindkey "^[[3;5~" kill-word
 bindkey "^[[3;3~" kill-word
 bindkey "^[[3~" delete-char

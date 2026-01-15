@@ -17,7 +17,7 @@ export CUDA_CACHE_PATH="$XDG_CACHE_HOME"/nv
 # GNUPG
 export GNUPGHOME="$XDG_DATA_HOME"/gnupg
 # Go
-GOPATH="$XDG_DATA_HOME"/go
+export GOPATH="$XDG_DATA_HOME"/go
 # Mypy
 export MYPY_CACHE_DIR="$XDG_CACHE_HOME"/mypy
 # npm
@@ -33,3 +33,9 @@ export LESSHISTFILE="$XDG_STATE_HOME"/less/history
 # dotnet - strike 1
 export DOTNET_CLI_HOME="$XDG_DATA_HOME"/dotnet
 export CODEX_HOME="$XDG_DATA_HOME"/codex
+export FVM_CACHE_PATH="$XDG_CACHE_HOME"/fvm
+export GRADLE_USER_HOME="$XDG_DATA_HOME"/gradle
+# Java
+export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
+# sqlite
+export SQLITE_HISTORY="$XDG_CACHE_HOME"/sqlite_history

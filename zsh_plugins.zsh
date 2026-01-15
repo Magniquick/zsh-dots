@@ -7,11 +7,12 @@ ZPLUGDIR="$ZDOTDIR/plugins"
 if [[ $TERM_PROGRAM = "vscode" ]]; then
 	# disable terminal.integrated.shellIntegration.enabled for this to work properly
 	# source vscode shell integration at the top to avoid conflicts with instant prompt
-	integration_path="resources/app/out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-rc.zsh"
+	file="out/vs/workbench/contrib/terminal/common/scripts/shellIntegration-rc.zsh"
+	integration_path="resources/app/$file"
 	if [[ -e "/opt/visual-studio-code/$integration_path" ]]; then
 		source "/opt/visual-studio-code/$integration_path"
-	elif [[ -e "/opt/Antigravity/$integration_path" ]]; then
-		source "/opt/Antigravity/$integration_path"
+	elif [[ -e "/usr/lib/antigravity/$file" ]]; then
+		source "/usr/lib/antigravity/$file"
 	else
 		# fallbaack if we cant find it there
 		echo "Sourcing VSCode shell integration via command - may be slower" >&2
