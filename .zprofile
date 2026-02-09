@@ -9,6 +9,6 @@ $(/usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generato
 EOF
 set +a
 
-if uwsm check may-start; then
+if uwsm check may-start > /dev/null; then
 	exec uwsm start hyprland.desktop > /dev/null # redirect success messages to the void
 fi

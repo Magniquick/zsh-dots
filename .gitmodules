@@ -25,7 +25,7 @@
 [submodule "plugins/clipboard"]
 	path = plugins/clipboard
 	url = https://github.com/zpm-zsh/clipboard.git
-[submodule "/home/magni/.config/zsh/plugins/iTerm2-shell-integration"]
+[submodule "plugins/iTerm2-shell-integration"]
 	path = plugins/iTerm2-shell-integration
 	url = https://github.com/gnachman/iTerm2-shell-integration.git
 [submodule "plugins/zsh-smartcache"]
