@@ -21,9 +21,10 @@ export GOPATH="$XDG_DATA_HOME"/go
 # Mypy
 export MYPY_CACHE_DIR="$XDG_CACHE_HOME"/mypy
 # npm
-export NPM_CONFIG_INIT_MODULE="$XDG_CONFIG_HOME"/npm/config/npm-init.js   
-export NPM_CONFIG_CACHE="$XDG_CACHE_HOME"/npm                             
-export NPM_CONFIG_TMP="$XDG_RUNTIME_DIR"/npm   
+export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
+export NPM_CONFIG_INIT_MODULE="$XDG_CONFIG_HOME/npm/npm-init.js"
+export NPM_CONFIG_CACHE="$XDG_CACHE_HOME/npm"
+export NPM_CONFIG_PREFIX="$XDG_DATA_HOME/npm"
 # wget
 alias wget="wget --hsts-file=$XDG_DATA_HOME/wget-hsts"
 # Python
@@ -39,3 +40,5 @@ export GRADLE_USER_HOME="$XDG_DATA_HOME"/gradle
 export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
 # sqlite
 export SQLITE_HISTORY="$XDG_CACHE_HOME"/sqlite_history
+# Claude
+export CLAUDE_CONFIG_DIR="$XDG_CONFIG_HOME"/claude

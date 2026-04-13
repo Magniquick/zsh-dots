@@ -9,7 +9,7 @@ typeset -U PATH FPATH path fpath
 # https://unix.stackexchange.com/a/12108
 stty -ixon
 
-# enviorment setup of XDG stuff and $PATH, includes loading zsh plugins
+# environment setup of XDG stuff and $PATH, includes loading zsh plugins
 source $ZDOTDIR/env.zsh
 source $ZDOTDIR/xdg.zsh
 # random stuff
@@ -20,13 +20,11 @@ setopt autocd
 # interactive comments - dont you all talk to yourself ?
 setopt interactivecomments
 setopt histignorespace # better history.
-setopt INC_APPEND_HISTORY # autosuggestions should work better
 setopt EXTENDED_GLOB # required for the rebuild function to work, plus it's nice !
 # History
 export HISTFILE="$ZDOTDIR/.histfile"
 export SAVEHIST=300000
 export HISTSIZE=$SAVEHIST
-setopt INC_APPEND_HISTORY
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt SHARE_HISTORY
 
@@ -37,7 +35,7 @@ export PATH="$UV_TOOL_BIN_DIR:$HOME/.local/share/cargo/bin:$HOME/.local/bin:$PAT
 # https://superuser.com/a/645612
 # setopt PROMPT_CR - breaks p10k, the fix still works too without this.
 setopt PROMPT_SP
-export PROMPT_EOL_MARK=""
+PROMPT_EOL_MARK=""
 
 # Set preferred editor
 for editor in micro nano vim vi; do

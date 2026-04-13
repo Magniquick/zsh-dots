@@ -24,7 +24,7 @@ if [ "$kind" = json ]; then
 	fi
 elif [ "$kind" = vnd.sqlite3 ]; then
 	if has_cmd yes sqlite3 bat; then
-		yes .q | sqlite3 "$1" | bat --color=always -plsql
+		yes .q | sqlite3 "$1" | head -1000 | bat --color=always -plsql
 	fi
 # https://github.com/wofr06/lesspipe/pull/107
 elif [ -d "$1" ]; then

@@ -1,3 +1,6 @@
 *.zwc
 *.zwc.old
 .histfile
+.histfile.bak-*
+*.bak
+.codex
