@@ -4,3 +4,4 @@
 .histfile.bak-*
 *.bak
 .codex
+/.p10k.colors.zsh
