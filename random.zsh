@@ -26,7 +26,6 @@ topgrade() {
 }
 
 (($+commands[codex])) && smartcache eval codex completion zsh
-smartcache eval mise activate zsh
 
 if [[ ${OSTYPE[1,6]} = "darwin" ]]; then
 	function man-preview() {
