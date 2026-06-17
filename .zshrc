@@ -55,9 +55,9 @@ done
 
 # Some aliases
 if (($+commands[eza])); then
-	alias ls='eza --icons=auto --hyperlink'
-	alias lah='eza -lah --icons=auto --hyperlink'
-	alias tree='eza --icons=auto --hyperlink --tree'
+	alias ls='eza --icons=auto --hyperlink=auto'
+	alias lah='eza -lah --icons=auto --hyperlink=auto'
+	alias tree='eza --icons=auto --hyperlink=auto --tree'
 fi
 
 # save your sanity a bit
@@ -127,3 +127,8 @@ if [[ -n "$TRASH_CMD" ]]; then
 	alias del="$TRASH_CMD"
 	alias rm='echo "Use del, or the full path, i.e. $(whence -p rm)" && false'
 fi
+
+# mise — dev tool + CLI version manager (manages ffuf/nuclei/subfinder/trufflehog etc.)
+# shims on PATH instead of `mise activate`: no per-prompt hook, also works in non-interactive contexts
+export PATH="$HOME/.local/share/mise/shims:$PATH"
+alias agy='antigravity'  # mise-managed Antigravity CLI (was AUR /usr/bin/agy)

@@ -29,7 +29,7 @@ elif [ "$kind" = vnd.sqlite3 ]; then
 # https://github.com/wofr06/lesspipe/pull/107
 elif [ -d "$1" ]; then
 	if has_cmd eza; then
-		eza --no-user -hl --git --color=always --icons "$1"
+		eza --no-user -hl --git --color=always --icons=auto "$1"
 	elif has_cmd exa; then
 		exa -hl --color=always --icons "$1"
 	fi

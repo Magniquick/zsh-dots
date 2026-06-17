@@ -114,8 +114,11 @@ fi
 if [[ "${TTY[1,9]}" == "/dev/pts/" ]]; then
 	# To customize prompt, run `p10k configure` or edit $ZDOTDIR/p10k.zsh.
 	source $ZPLUGDIR/powerlevel10k/powerlevel10k.zsh-theme
-	source $ZDOTDIR/.p10k.zsh 
-	source $ZDOTDIR/.p10k.colors.zsh
+	source $ZDOTDIR/.p10k.zsh
+	# Apply custom colors if present, otherwise fall back to p10k's basic defaults.
+	if [[ -r "$ZDOTDIR/.p10k.colors.zsh" ]]; then
+		source $ZDOTDIR/.p10k.colors.zsh
+	fi
 else # init a basic prompt for tty sessions
 	export PROMPT='[%n@%m %~]%(!.#.$) '
 fi
