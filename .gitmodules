@@ -22,10 +22,6 @@
 	path = plugins/zsh-completions
 	url = https://github.com/zsh-users/zsh-completions.git
 	ignore = untracked
-[submodule "plugins/clipboard"]
-	path = plugins/clipboard
-	url = https://github.com/zpm-zsh/clipboard.git
-	ignore = untracked
 [submodule "plugins/iTerm2-shell-integration"]
 	path = plugins/iTerm2-shell-integration
 	url = https://github.com/gnachman/iTerm2-shell-integration.git

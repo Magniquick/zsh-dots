@@ -64,8 +64,10 @@ zstyle ':completion::complete:*' cache-path "${XDG_CACHE_HOME}/zsh/"
 # shell is opened each day.
 autoload -Uz compinit
 _comp_path="${XDG_CACHE_HOME}/zsh/zcompdump"
-# #q expands globs in conditional expressions
-if [[ $_comp_path(#qNmh-24) ]]; then
+# Glob in an array assignment: [[ ]] doesn't glob, and #q needs extendedglob,
+# which isn't set yet here. Bare (Nmh-24) qualifiers need neither.
+_comp_fresh=($_comp_path(Nmh-24))
+if (($#_comp_fresh)); then
   # -C (skip function check) implies -i (skip security check).
   compinit -C -i -d "$_comp_path"
 else
@@ -74,9 +76,9 @@ else
   # Keep $_comp_path younger than cache time even if it isn't regenerated.
   touch "$_comp_path"
 fi
-unset _comp_path
+unset _comp_path _comp_fresh
 
-source $ZPLUGDIR/clipboard/clipboard.plugin.zsh
+source $ZDOTDIR/clipboard.zsh
 
 export LESSOPEN="|$ZDOTDIR/lessfilter %s"
 if ! (($+commands[fzf])); then
