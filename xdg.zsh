@@ -42,3 +42,8 @@ export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
 export SQLITE_HISTORY="$XDG_CACHE_HOME"/sqlite_history
 # Claude
 export CLAUDE_CONFIG_DIR="$XDG_CONFIG_HOME"/claude
+# pi
+export PI_CODING_AGENT_DIR="$XDG_CONFIG_HOME"/pi
+export PI_CODING_AGENT_SESSION_DIR="$XDG_STATE_HOME"/pi/sessions
+# mise updates pi; this also makes topgrade skip `pi update --self`
+export PI_SKIP_VERSION_CHECK=1

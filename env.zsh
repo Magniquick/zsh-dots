@@ -77,3 +77,15 @@ source $ZDOTDIR/zsh_plugins.zsh
 # }
 
 # add-zsh-hook chpwd chpwd_autosource_venv
+
+# $HOME is itself a git worktree (dotbak + jj colocated), so plain `git` run in
+# any non-repo dir under ~ walks up and reports the entire dotfiles tree. The
+# ceiling stops that ascent. cwd is exempt, so `git` still works in ~ itself,
+# and `jj` ignores this var entirely, so dotfiles work in ~/.config/* is fine.
+export GIT_CEILING_DIRECTORIES="$HOME"
+
+# Claude Code: no metrics, error reports, auto-updates, feedback surveys or
+# release-note fetches. Also stops the Statsig feature-flag fetch, so gated
+# behaviour falls back to built-in defaults and Remote Control won't work.
+export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+export DISABLE_TELEMETRY=1
